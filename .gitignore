@@ -1,0 +1,34 @@
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# --- Sanal ortam ---
+venv/
+.venv/
+env/
+
+# --- Gizli bilgiler (ASLA yüklenmez) ---
+.env
+*.pem
+*.key
+secrets.*
+
+# --- Yerel veritabanı ---
+*.db
+*.sqlite3
+instance/
+
+# --- Log ve geçici dosyalar ---
+*.log
+tmp/
+
+# --- Editör / işletim sistemi ---
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini

@@ -1,0 +1,40 @@
+:root {
+  --zemin: #f5f7fa;
+  --yuzey: #ffffff;
+  --metin: #1f2933;
+  --soluk: #616e7c;
+  --vurgu: #2563eb;
+  --cizgi: #e4e7eb;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  background: var(--zemin);
+  color: var(--metin);
+  line-height: 1.6;
+}
+.ust {
+  background: var(--yuzey); border-bottom: 1px solid var(--cizgi); padding: 14px 24px;
+  display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap;
+}
+.durum { font-size: .85rem; color: var(--soluk); }
+.durum.bagli { color: #15803d; }
+.durum.hata { color: #b91c1c; }
+.uyari { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; padding: 14px; border-radius: 8px; }
+.logo { font-weight: 700; color: var(--metin); text-decoration: none; font-size: 1.1rem; }
+.icerik { max-width: 960px; margin: 0 auto; padding: 32px 16px; }
+.giris h1 { font-size: 2rem; margin: 0 0 8px; }
+.giris p { color: var(--soluk); max-width: 640px; }
+.not { font-size: .9rem; font-weight: 600; color: var(--vurgu) !important; }
+.kartlar {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 16px;
+  margin-top: 32px;
+}
+.kart { background: var(--yuzey); border: 1px solid var(--cizgi); border-radius: 10px; padding: 20px; }
+.kart h2 { font-size: 1.1rem; margin: 0 0 6px; }
+.kart p { color: var(--soluk); margin: 0 0 12px; }
+.rozet { font-size: .8rem; background: #eff6ff; color: var(--vurgu); padding: 3px 10px; border-radius: 999px; }
+.alt { text-align: center; color: var(--soluk); font-size: .85rem; padding: 24px; }
