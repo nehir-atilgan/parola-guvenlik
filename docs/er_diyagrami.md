@@ -76,6 +76,8 @@ erDiagram
 - **2NF:** Bileşik anahtarlı tek tablo `analiz_oneri`'dir; `oncelik` ve `kisisel_not` anahtarın tamamına (analiz + öneri) bağlıdır. Öneri başlığı/açıklaması yalnızca `oneri_id`'ye bağlı olduğundan `oneri` tablosuna ayrıldı.
 - **3NF:** Kullanıcı bilgileri (ad, e-posta) analiz veya quiz tablolarında tekrar edilmez; yalnızca `kullanici_id` yabancı anahtarı tutulur.
 
+> Tabloların SQL karşılığı, kısıtlar ve indeksler: [veritabani.md](veritabani.md) · `backend/app/veri/migrations/001_ilk_sema.sql`
+
 ## Güvenlik kararı
 
 Analiz edilen parola **veya hash'i veritabanına yazılmaz**. Sızıntı kontrolü HIBP'nin k-anonimlik yöntemiyle yapılır (SHA-1 özetinin yalnızca ilk 5 karakteri gönderilir); sonuçtan sadece `sizinti_sayisi` saklanır. `kullanici.sifre_hash` ise siteye giriş parolasıdır ve tuzlu hash ile saklanır.

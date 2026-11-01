@@ -26,7 +26,7 @@ Bireysel kullanıcılar ve kurum çalışanları.
 
 - **Backend:** Python 3, Flask (REST API, JSON)
 - **Frontend:** HTML, CSS, JavaScript (fetch ile API'ye bağlanır)
-- **Veritabanı:** PostgreSQL (yerel geliştirmede SQLite), SQLAlchemy ORM
+- **Veritabanı:** SQLite, saf SQL ve sürümlü migration dosyaları
 - **Harici servisler:** Have I Been Pwned (Pwned Passwords), LLM API
 
 ## Klasör yapısı
@@ -40,7 +40,10 @@ parola-guvenlik/
 │   │   ├── api/                 #   API KATMANI: /api/... uç noktaları
 │   │   ├── servisler/           #   İŞ KATMANI: analiz, sızıntı, öneri, quiz, rapor
 │   │   └── veri/                #   VERİ KATMANI
-│   │       └── models.py        #     Veritabanı tabloları
+│   │       ├── migrations/      #     Sürümlü şema dosyaları (001, 002 ...)
+│   │       ├── migrator.py      #     Migration çalıştırıcısı
+│   │       ├── repolar/         #     CRUD fonksiyonları (her tablo için)
+│   │       └── ornek_veri.py    #     Sentetik örnek veri (KVKK uyumlu)
 │   ├── tests/                   #   Otomatik testler
 │   ├── .env.example             #   Örnek ortam değişkenleri
 │   ├── requirements.txt
@@ -54,7 +57,10 @@ parola-guvenlik/
 │       └── app.js               #   Sayfa mantığı
 └── docs/
     ├── er_diyagrami.md          # ER diyagramı + normalizasyon
-    └── mimari.md                # Mimari şema
+    ├── mimari.md                # Mimari şema
+    ├── veritabani.md            # Kısıtlar, indeksler, migration, CRUD açıklaması
+    ├── ornek_sorgular.sql       # Örnek veriyle çalışan sorgular
+    └── ornek_veri_dokumu.sql    # Örnek veriyle dolu veritabanının dökümü
 ```
 
 ## Kurulum ve çalıştırma
@@ -69,6 +75,7 @@ python -m venv venv
 venv\Scripts\activate          # macOS/Linux: source venv/bin/activate
 pip install -r requirements.txt
 copy .env.example .env         # macOS/Linux: cp .env.example .env
+flask --app run ornek-veri     # sentetik örnek veriyi yükler (bir kez)
 python run.py                  # http://127.0.0.1:5000
 ```
 
@@ -83,10 +90,16 @@ Tarayıcıda **http://127.0.0.1:8000** adresini açın. Sağ üstte "● Backend
 
 Backend testleri: `backend` klasöründe `pytest`
 
+Veritabanı durumu (uygulanan migration'lar, tablo satır sayıları): `flask --app run db-durum`
+
+Veritabanı ilk çalıştırmada `backend/instance/parola_guvenlik.db` olarak otomatik oluşturulur. İçini görmek için [DB Browser for SQLite](https://sqlitebrowser.org/) kullanılabilir.
+
 ## Belgeler
 
 - [ER diyagramı ve veri modeli](docs/er_diyagrami.md)
 - [Mimari şema](docs/mimari.md)
+- [Veritabanı tasarımı ve veri erişim katmanı](docs/veritabani.md)
+- [Örnek sorgular](docs/ornek_sorgular.sql)
 
 ## Gizlilik ilkesi
 
@@ -97,3 +110,4 @@ Analiz edilen parolalar **hiçbir zaman saklanmaz**. Sızıntı kontrolünde par
 | Hafta | Konu | Durum |
 |---|---|---|
 | 3 | Kurulum, mimari ve veri modeli | ✅ |
+| 4 | Veritabanı tasarımı ve veri erişim katmanı | ✅ |

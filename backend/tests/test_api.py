@@ -1,24 +1,17 @@
-import pytest
-
-pytest.importorskip("flask_sqlalchemy")
-
-from app import create_app  # noqa: E402
-from app.config import TestConfig  # noqa: E402
-
-
-@pytest.fixture
-def istemci():
-    return create_app(TestConfig).test_client()
-
-
 def test_saglik_kontrolu(istemci):
-    assert istemci.get("/api/saglik").get_json() == {"durum": "calisiyor"}
+    assert istemci.get("/api/saglik").get_json() == {"durum": "calisiyor", "veritabani": "bagli"}
 
 
 def test_moduller_listesi(istemci):
     moduller = istemci.get("/api/moduller").get_json()
     assert len(moduller) == 5
-    assert {"kod", "ad", "aciklama", "hafta"} <= set(moduller[0])
+    assert {"kod", "ad", "aciklama"} <= set(moduller[0])
+
+
+def test_oneriler_veritabanindan_gelir(istemci):
+    oneriler = istemci.get("/api/oneriler").get_json()
+    assert len(oneriler) == 9
+    assert {o["kod"] for o in oneriler} >= {"UZUNLUK_ARTIR", "IKI_FAKTOR"}
 
 
 def test_cors_izinli_frontend(istemci):

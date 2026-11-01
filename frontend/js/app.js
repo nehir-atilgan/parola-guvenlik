@@ -29,7 +29,7 @@ function kartOlustur(m) {
   aciklama.textContent = m.aciklama;
   const rozet = document.createElement("span");
   rozet.className = "rozet";
-  rozet.textContent = "Yakında · Hafta " + m.hafta;
+  rozet.textContent = "Yakında";
 
   kart.append(baslik, aciklama, rozet);
   return kart;

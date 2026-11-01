@@ -5,11 +5,13 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+BACKEND_KLASORU = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
 
 class Config:
     SECRET_KEY = os.getenv("SECRET_KEY", "gelistirme-anahtari-degistirin")
-    SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL") or "sqlite:///parola_guvenlik.db"
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
+    # SQLite veritabanı dosyası (yoksa otomatik oluşturulur)
+    VERITABANI = os.getenv("VERITABANI") or os.path.join(BACKEND_KLASORU, "instance", "parola_guvenlik.db")
     HIBP_API_URL = os.getenv("HIBP_API_URL", "https://api.pwnedpasswords.com/range/")
     LLM_API_KEY = os.getenv("LLM_API_KEY", "")
     # Backend'e istek atmasına izin verilen frontend adresleri (virgülle ayrılır)
@@ -22,4 +24,4 @@ class Config:
 
 class TestConfig(Config):
     TESTING = True
-    SQLALCHEMY_DATABASE_URI = "sqlite:///:memory:"
+    VERITABANI = None  # testler her seferinde geçici bir dosya verir

@@ -27,11 +27,11 @@ flowchart TB
             RS["rapor_servisi"]
         end
         subgraph V["VERİ KATMANI — app/veri"]
-            M["models.py<br/>(SQLAlchemy)"]
+            M["repolar/ (CRUD, saf SQL)<br/>migrations/ (şema)"]
         end
     end
 
-    DB[("PostgreSQL<br/>(yerelde SQLite)")]
+    DB[("SQLite<br/>instance/parola_guvenlik.db")]
     HIBP["Have I Been Pwned API<br/>(k-anonimlik)"]
     LLM["LLM API<br/>(kişisel öneriler)"]
 
@@ -56,12 +56,13 @@ flowchart TB
 
 **Kural:** Bağımlılık yalnızca bir yönde akar: Frontend → API → İş → Veri. Frontend veritabanını hiç görmez.
 
-## API uç noktaları (Hafta 3)
+## API uç noktaları
 
 | Yöntem | Adres | Yanıt |
 |---|---|---|
-| GET | `/api/saglik` | `{"durum": "calisiyor"}` |
+| GET | `/api/saglik` | `{"durum": "calisiyor", "veritabani": "bagli"}` |
 | GET | `/api/moduller` | Sitedeki modüllerin listesi |
+| GET | `/api/oneriler` | Veritabanındaki öneri kataloğu (Hafta 4) |
 
 ## Neden frontend ve backend ayrıldı?
 
