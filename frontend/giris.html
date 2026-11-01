@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Giriş Yap · Parola Güvenliği</title>
+  <link rel="stylesheet" href="css/stil.css">
+</head>
+<body>
+  <header class="ust">
+    <a href="index.html" class="logo">🔐 Parola Güvenliği</a>
+    <nav id="menu" class="menu"></nav>
+  </header>
+
+  <main class="icerik dar">
+    <h1>Giriş yap</h1>
+    <form id="giris-formu" class="form" novalidate>
+      <label>E-posta
+        <input name="eposta" type="email" autocomplete="username" required>
+      </label>
+      <label>Parola
+        <input name="parola" type="password" autocomplete="current-password" required>
+      </label>
+      <p id="mesaj" class="mesaj" role="alert" hidden></p>
+      <button type="submit" class="btn">Giriş yap</button>
+      <p class="alt-bag">Hesabınız yok mu? <a href="kayit.html">Kayıt olun</a></p>
+    </form>
+  </main>
+
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/oturum.js"></script>
+  <script>
+    const form = document.getElementById("giris-formu");
+    const mesaj = document.getElementById("mesaj");
+    const goster = (metin, tur) => { mesaj.textContent = metin; mesaj.className = "mesaj " + tur; mesaj.hidden = false; };
+    const parametre = new URLSearchParams(location.search);
+
+    const NEDENLER = {
+      kayit: ["Kayıt başarılı. Şimdi giriş yapabilirsiniz.", "basari"],
+      cikis: ["Çıkış yaptınız.", "bilgi"],
+      giris: ["Bu sayfayı görmek için giriş yapmalısınız.", "bilgi"],
+      sure:  ["Oturumunuzun süresi doldu. Lütfen tekrar giriş yapın.", "bilgi"],
+    };
+    if (NEDENLER[parametre.get("neden")]) goster(...NEDENLER[parametre.get("neden")]);
+    if (parametre.get("eposta")) form.eposta.value = parametre.get("eposta");
+
+    // Yalnızca kendi sitemizdeki .html sayfalarına geri dönülür (açık yönlendirme engellenir).
+    const donus = parametre.get("donus");
+    const hedef = donus && /^[a-z]+\.html$/.test(donus) ? donus : "panel.html";
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const btn = form.querySelector("button");
+      btn.disabled = true;
+      try {
+        const { token, kullanici } = await api.giris(form.eposta.value, form.parola.value);
+        oturum.kaydet(token, kullanici);
+        location.href = hedef;
+      } catch (hata) {
+        form.parola.value = "";
+        goster(hata.message, "hata");
+      } finally {
+        btn.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>

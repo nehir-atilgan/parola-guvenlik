@@ -1,5 +1,6 @@
 -- Örnek veriyle dolu veritabanının SQL dökümü (flask --app run ornek-veri ile üretildi).
 -- Tüm veriler sentetiktir; gerçek kişi verisi içermez (KVKK).
+-- sifre_hash sütunları scrypt + tuz ile hash'lenmiş değerlerdir; düz parola yoktur.
 
 BEGIN TRANSACTION;
 CREATE TABLE analiz_kaydi (
@@ -16,20 +17,30 @@ CREATE TABLE analiz_kaydi (
     sizinti_sayisi  INTEGER NOT NULL DEFAULT 0 CHECK (sizinti_sayisi >= 0),
     analiz_tarihi   TEXT    NOT NULL DEFAULT (datetime('now'))
 );
-INSERT INTO "analiz_kaydi" VALUES(1,1,13,76,'guclu',1,1,1,0,0,'2026-11-01 14:05:26');
-INSERT INTO "analiz_kaydi" VALUES(2,2,11,60,'orta',1,0,1,0,0,'2026-11-01 14:05:26');
-INSERT INTO "analiz_kaydi" VALUES(3,3,5,44,'orta',0,1,1,1,0,'2026-11-01 14:05:27');
-INSERT INTO "analiz_kaydi" VALUES(4,3,8,48,'orta',1,1,0,0,0,'2026-11-01 14:05:27');
-INSERT INTO "analiz_kaydi" VALUES(5,3,19,100,'guclu',1,0,1,1,0,'2026-11-01 14:05:27');
-INSERT INTO "analiz_kaydi" VALUES(6,4,12,48,'orta',0,0,0,0,0,'2026-11-01 14:05:27');
-INSERT INTO "analiz_kaydi" VALUES(7,5,11,52,'orta',0,0,0,1,0,'2026-11-01 14:05:27');
-INSERT INTO "analiz_kaydi" VALUES(8,5,12,64,'orta',1,1,0,0,0,'2026-11-01 14:05:27');
-INSERT INTO "analiz_kaydi" VALUES(9,5,12,56,'orta',0,0,0,1,0,'2026-11-01 14:05:27');
-INSERT INTO "analiz_kaydi" VALUES(10,6,11,60,'orta',0,1,0,1,0,'2026-11-01 14:05:27');
-INSERT INTO "analiz_kaydi" VALUES(11,6,13,68,'orta',1,0,1,0,0,'2026-11-01 14:05:27');
-INSERT INTO "analiz_kaydi" VALUES(12,6,18,88,'guclu',0,1,1,0,0,'2026-11-01 14:05:27');
-INSERT INTO "analiz_kaydi" VALUES(13,7,9,52,'orta',0,0,1,1,100040,'2026-11-01 14:05:27');
-INSERT INTO "analiz_kaydi" VALUES(14,8,13,76,'guclu',0,1,1,1,0,'2026-11-01 14:05:27');
+INSERT INTO "analiz_kaydi" VALUES(1,1,6,56,'orta',1,1,1,1,52125,'2026-11-01 14:15:03');
+INSERT INTO "analiz_kaydi" VALUES(2,1,12,64,'orta',1,1,0,0,0,'2026-11-01 14:15:03');
+INSERT INTO "analiz_kaydi" VALUES(3,1,10,56,'orta',0,1,1,0,0,'2026-11-01 14:15:03');
+INSERT INTO "analiz_kaydi" VALUES(4,1,7,60,'orta',1,1,1,1,0,'2026-11-01 14:15:04');
+INSERT INTO "analiz_kaydi" VALUES(5,2,8,48,'orta',0,1,1,0,0,'2026-11-01 14:15:04');
+INSERT INTO "analiz_kaydi" VALUES(6,2,11,68,'orta',0,1,1,1,0,'2026-11-01 14:15:04');
+INSERT INTO "analiz_kaydi" VALUES(7,2,7,44,'orta',0,0,1,1,0,'2026-11-01 14:15:04');
+INSERT INTO "analiz_kaydi" VALUES(8,2,10,64,'orta',1,1,1,0,0,'2026-11-01 14:15:04');
+INSERT INTO "analiz_kaydi" VALUES(9,3,10,56,'orta',1,1,0,0,0,'2026-11-01 14:15:04');
+INSERT INTO "analiz_kaydi" VALUES(10,3,6,56,'orta',1,1,1,1,0,'2026-11-01 14:15:04');
+INSERT INTO "analiz_kaydi" VALUES(11,4,17,84,'guclu',0,0,1,1,0,'2026-11-01 14:15:04');
+INSERT INTO "analiz_kaydi" VALUES(12,4,13,76,'guclu',0,1,1,1,0,'2026-11-01 14:15:04');
+INSERT INTO "analiz_kaydi" VALUES(13,4,9,68,'orta',1,1,1,1,0,'2026-11-01 14:15:04');
+INSERT INTO "analiz_kaydi" VALUES(14,4,10,64,'orta',0,1,1,1,0,'2026-11-01 14:15:04');
+INSERT INTO "analiz_kaydi" VALUES(15,5,8,48,'orta',0,1,1,0,0,'2026-11-01 14:15:04');
+INSERT INTO "analiz_kaydi" VALUES(16,6,5,36,'zayif',0,0,1,1,0,'2026-11-01 14:15:04');
+INSERT INTO "analiz_kaydi" VALUES(17,6,14,80,'guclu',0,1,1,1,0,'2026-11-01 14:15:04');
+INSERT INTO "analiz_kaydi" VALUES(18,6,10,64,'orta',1,0,1,1,0,'2026-11-01 14:15:04');
+INSERT INTO "analiz_kaydi" VALUES(19,6,15,84,'guclu',1,1,1,0,0,'2026-11-01 14:15:04');
+INSERT INTO "analiz_kaydi" VALUES(20,7,12,64,'orta',0,0,1,1,0,'2026-11-01 14:15:04');
+INSERT INTO "analiz_kaydi" VALUES(21,8,9,52,'orta',0,0,1,1,159015,'2026-11-01 14:15:04');
+INSERT INTO "analiz_kaydi" VALUES(22,8,11,44,'orta',0,0,0,0,0,'2026-11-01 14:15:04');
+INSERT INTO "analiz_kaydi" VALUES(23,9,12,80,'guclu',1,1,1,1,0,'2026-11-01 14:15:04');
+INSERT INTO "analiz_kaydi" VALUES(24,10,7,52,'orta',0,1,1,1,0,'2026-11-01 14:15:05');
 CREATE TABLE analiz_oneri (
     analiz_id    INTEGER NOT NULL REFERENCES analiz_kaydi(id) ON DELETE CASCADE,
     oneri_id     INTEGER NOT NULL REFERENCES oneri(id)        ON DELETE RESTRICT, -- kullanımdaki öneri silinemez
@@ -37,63 +48,93 @@ CREATE TABLE analiz_oneri (
     kisisel_not  TEXT,                                  -- yapay zekâ ile üretilecek kişisel açıklama
     PRIMARY KEY (analiz_id, oneri_id)                   -- aynı öneri bir analize iki kez eklenemez
 );
-INSERT INTO "analiz_oneri" VALUES(1,5,1,NULL);
-INSERT INTO "analiz_oneri" VALUES(1,9,2,NULL);
-INSERT INTO "analiz_oneri" VALUES(2,1,1,NULL);
+INSERT INTO "analiz_oneri" VALUES(1,6,1,NULL);
+INSERT INTO "analiz_oneri" VALUES(1,1,2,NULL);
+INSERT INTO "analiz_oneri" VALUES(1,9,3,NULL);
+INSERT INTO "analiz_oneri" VALUES(2,4,1,NULL);
 INSERT INTO "analiz_oneri" VALUES(2,5,2,NULL);
 INSERT INTO "analiz_oneri" VALUES(2,9,3,NULL);
 INSERT INTO "analiz_oneri" VALUES(3,1,1,NULL);
 INSERT INTO "analiz_oneri" VALUES(3,3,2,NULL);
-INSERT INTO "analiz_oneri" VALUES(3,9,3,NULL);
+INSERT INTO "analiz_oneri" VALUES(3,5,3,NULL);
+INSERT INTO "analiz_oneri" VALUES(3,9,4,NULL);
 INSERT INTO "analiz_oneri" VALUES(4,1,1,NULL);
-INSERT INTO "analiz_oneri" VALUES(4,4,2,NULL);
-INSERT INTO "analiz_oneri" VALUES(4,5,3,NULL);
-INSERT INTO "analiz_oneri" VALUES(4,9,4,NULL);
-INSERT INTO "analiz_oneri" VALUES(5,9,1,NULL);
-INSERT INTO "analiz_oneri" VALUES(6,3,1,NULL);
-INSERT INTO "analiz_oneri" VALUES(6,4,2,NULL);
-INSERT INTO "analiz_oneri" VALUES(6,5,3,NULL);
-INSERT INTO "analiz_oneri" VALUES(6,9,4,NULL);
+INSERT INTO "analiz_oneri" VALUES(4,9,2,NULL);
+INSERT INTO "analiz_oneri" VALUES(5,1,1,NULL);
+INSERT INTO "analiz_oneri" VALUES(5,3,2,NULL);
+INSERT INTO "analiz_oneri" VALUES(5,5,3,NULL);
+INSERT INTO "analiz_oneri" VALUES(5,9,4,NULL);
+INSERT INTO "analiz_oneri" VALUES(6,1,1,NULL);
+INSERT INTO "analiz_oneri" VALUES(6,3,2,NULL);
+INSERT INTO "analiz_oneri" VALUES(6,9,3,NULL);
 INSERT INTO "analiz_oneri" VALUES(7,1,1,NULL);
 INSERT INTO "analiz_oneri" VALUES(7,3,2,NULL);
-INSERT INTO "analiz_oneri" VALUES(7,4,3,NULL);
-INSERT INTO "analiz_oneri" VALUES(7,9,4,NULL);
-INSERT INTO "analiz_oneri" VALUES(8,4,1,NULL);
+INSERT INTO "analiz_oneri" VALUES(7,9,3,NULL);
+INSERT INTO "analiz_oneri" VALUES(8,1,1,NULL);
 INSERT INTO "analiz_oneri" VALUES(8,5,2,NULL);
 INSERT INTO "analiz_oneri" VALUES(8,9,3,NULL);
-INSERT INTO "analiz_oneri" VALUES(9,3,1,NULL);
+INSERT INTO "analiz_oneri" VALUES(9,1,1,NULL);
 INSERT INTO "analiz_oneri" VALUES(9,4,2,NULL);
-INSERT INTO "analiz_oneri" VALUES(9,9,3,NULL);
+INSERT INTO "analiz_oneri" VALUES(9,5,3,NULL);
+INSERT INTO "analiz_oneri" VALUES(9,9,4,NULL);
 INSERT INTO "analiz_oneri" VALUES(10,1,1,NULL);
-INSERT INTO "analiz_oneri" VALUES(10,3,2,NULL);
-INSERT INTO "analiz_oneri" VALUES(10,4,3,NULL);
-INSERT INTO "analiz_oneri" VALUES(10,9,4,NULL);
-INSERT INTO "analiz_oneri" VALUES(11,5,1,NULL);
+INSERT INTO "analiz_oneri" VALUES(10,9,2,NULL);
+INSERT INTO "analiz_oneri" VALUES(11,3,1,NULL);
 INSERT INTO "analiz_oneri" VALUES(11,9,2,NULL);
 INSERT INTO "analiz_oneri" VALUES(12,3,1,NULL);
-INSERT INTO "analiz_oneri" VALUES(12,5,2,NULL);
-INSERT INTO "analiz_oneri" VALUES(12,9,3,NULL);
-INSERT INTO "analiz_oneri" VALUES(13,6,1,NULL);
-INSERT INTO "analiz_oneri" VALUES(13,1,2,NULL);
-INSERT INTO "analiz_oneri" VALUES(13,3,3,NULL);
-INSERT INTO "analiz_oneri" VALUES(13,9,4,NULL);
-INSERT INTO "analiz_oneri" VALUES(14,3,1,NULL);
-INSERT INTO "analiz_oneri" VALUES(14,9,2,NULL);
+INSERT INTO "analiz_oneri" VALUES(12,9,2,NULL);
+INSERT INTO "analiz_oneri" VALUES(13,1,1,NULL);
+INSERT INTO "analiz_oneri" VALUES(13,9,2,NULL);
+INSERT INTO "analiz_oneri" VALUES(14,1,1,NULL);
+INSERT INTO "analiz_oneri" VALUES(14,3,2,NULL);
+INSERT INTO "analiz_oneri" VALUES(14,9,3,NULL);
+INSERT INTO "analiz_oneri" VALUES(15,1,1,NULL);
+INSERT INTO "analiz_oneri" VALUES(15,3,2,NULL);
+INSERT INTO "analiz_oneri" VALUES(15,5,3,NULL);
+INSERT INTO "analiz_oneri" VALUES(15,9,4,NULL);
+INSERT INTO "analiz_oneri" VALUES(16,1,1,NULL);
+INSERT INTO "analiz_oneri" VALUES(16,3,2,NULL);
+INSERT INTO "analiz_oneri" VALUES(16,9,3,NULL);
+INSERT INTO "analiz_oneri" VALUES(17,3,1,NULL);
+INSERT INTO "analiz_oneri" VALUES(17,9,2,NULL);
+INSERT INTO "analiz_oneri" VALUES(18,1,1,NULL);
+INSERT INTO "analiz_oneri" VALUES(18,9,2,NULL);
+INSERT INTO "analiz_oneri" VALUES(19,5,1,NULL);
+INSERT INTO "analiz_oneri" VALUES(19,9,2,NULL);
+INSERT INTO "analiz_oneri" VALUES(20,3,1,NULL);
+INSERT INTO "analiz_oneri" VALUES(20,9,2,NULL);
+INSERT INTO "analiz_oneri" VALUES(21,6,1,NULL);
+INSERT INTO "analiz_oneri" VALUES(21,1,2,NULL);
+INSERT INTO "analiz_oneri" VALUES(21,3,3,NULL);
+INSERT INTO "analiz_oneri" VALUES(21,9,4,NULL);
+INSERT INTO "analiz_oneri" VALUES(22,1,1,NULL);
+INSERT INTO "analiz_oneri" VALUES(22,3,2,NULL);
+INSERT INTO "analiz_oneri" VALUES(22,4,3,NULL);
+INSERT INTO "analiz_oneri" VALUES(22,5,4,NULL);
+INSERT INTO "analiz_oneri" VALUES(22,9,5,NULL);
+INSERT INTO "analiz_oneri" VALUES(23,9,1,NULL);
+INSERT INTO "analiz_oneri" VALUES(24,1,1,NULL);
+INSERT INTO "analiz_oneri" VALUES(24,3,2,NULL);
+INSERT INTO "analiz_oneri" VALUES(24,9,3,NULL);
 CREATE TABLE kullanici (
     id            INTEGER PRIMARY KEY AUTOINCREMENT,
     ad_soyad      TEXT    NOT NULL CHECK (length(trim(ad_soyad)) >= 2),
     eposta        TEXT    NOT NULL UNIQUE CHECK (eposta LIKE '%_@_%._%'),
     sifre_hash    TEXT    NOT NULL,                     -- siteye giriş parolasının tuzlu hash'i
     kayit_tarihi  TEXT    NOT NULL DEFAULT (datetime('now'))
-);
-INSERT INTO "kullanici" VALUES(1,'Test Kullanıcı 1','test1@ornek.test','scrypt:32768:8:1$cWrLkUKyBTvCufCb$14d666194dc37d2532fc88ba83ce3e8878548dd67ac759ba053cfe578e8d0035f8e3aa8f4d2847db3b5f95f0adb67f74c6faa0035e7a019de6152b7be4404f55','2026-11-01 14:05:26');
-INSERT INTO "kullanici" VALUES(2,'Test Kullanıcı 2','test2@ornek.test','scrypt:32768:8:1$RM1EnOGsJu1VYeMU$dd44e677d0153743c8680c3c91b4f48a7a7a6ec55f7c5a9ae6cdc945076fcee4bd43f4d493774ab266214ff592f8ea31c70039caab5586b58fadca89f3ad58e9','2026-11-01 14:05:26');
-INSERT INTO "kullanici" VALUES(3,'Test Kullanıcı 3','test3@ornek.test','scrypt:32768:8:1$KK0dGXjLGB6m8Kga$412290b0fa52731ee9181c6228b28a863af7117eb61d653e4dc1f09578e1e440462153dbea5378b6e7e5c34dfce406d6c67bb907fc511032480465aa5aa5c24f','2026-11-01 14:05:27');
-INSERT INTO "kullanici" VALUES(4,'Test Kullanıcı 4','test4@ornek.test','scrypt:32768:8:1$qxfsIWtIpjare720$5105bc36f8c3669dc787963f009f6204afb3aa082370c338bc1419e2b86cf3e42dc765b07d09b40a3c18423dd27a9a570d2df33d114710824bbd2167f85b0c4a','2026-11-01 14:05:27');
-INSERT INTO "kullanici" VALUES(5,'Test Kullanıcı 5','test5@ornek.test','scrypt:32768:8:1$tdivXNldTk8DFAoS$b0580a24ad4c9931778291e3ffab196895a2bfa2dc80b13c12b29857782d06f11087352ec17e27f839d42e28387b1d43e61e1410b8bca8670ca11868e1bf279d','2026-11-01 14:05:27');
-INSERT INTO "kullanici" VALUES(6,'Test Kullanıcı 6','test6@ornek.test','scrypt:32768:8:1$mc62L6KZ87JEOcXX$cb206c42d75bcf1a0aaf3f4b8e1cd86fa7092d5572e7d6a50a2eb431132bbfd16ec47d12058b64e2b76bbd590fa8ac22dcc7313569af36ceb9cff0350dd231da','2026-11-01 14:05:27');
-INSERT INTO "kullanici" VALUES(7,'Test Kullanıcı 7','test7@ornek.test','scrypt:32768:8:1$AUgnFLHgSJd7b7Vj$9df6d2790e91b693962a21468ce34220ce460968f40e56ce36f74c82da6d73170b28ad0b6a342f9b6e7ed710960811e0d45711bb9f191332f5e9acedfe2117c7','2026-11-01 14:05:27');
-INSERT INTO "kullanici" VALUES(8,'Test Kullanıcı 8','test8@ornek.test','scrypt:32768:8:1$nJjGMrr29akzNINP$61732d7389bac447cae0a5af987641364a966773e6c2c16036422422e2c05b7ff9a1462072822b03e9f0c626787af0085986ff6ab08b780898dd0e6790952a92','2026-11-01 14:05:27');
+, rol TEXT NOT NULL DEFAULT 'kullanici'
+    CHECK (rol IN ('kullanici', 'yonetici')), basarisiz_giris INTEGER NOT NULL DEFAULT 0
+    CHECK (basarisiz_giris >= 0), kilit_bitis TEXT);
+INSERT INTO "kullanici" VALUES(1,'Demo Yönetici','yonetici@ornek.test','scrypt:32768:8:1$isHQ0I3x04BOSUyc$9e92f0641123097c51a81e80a1738954263085d181537135e59231657b41bcb0a53caa052600445568fcb1270d3c59094ee12bd74d46daaf25fc966e594842f8','2026-11-01 14:15:03','yonetici',0,NULL);
+INSERT INTO "kullanici" VALUES(2,'Demo Kullanıcı','kullanici@ornek.test','scrypt:32768:8:1$E3KDbIDCH5kd2H5r$84895b208e277d016042a6bd4d86906474d799385fea984ad6318ec2f1d49526493e6ad5253909b8fb5e7b3f88efb9f80093b55249e8156f180c6dc5f2c8949d','2026-11-01 14:15:04','kullanici',0,NULL);
+INSERT INTO "kullanici" VALUES(3,'Test Kullanıcı 1','test1@ornek.test','scrypt:32768:8:1$rqMuG5TxE2De5D30$fbb84616661b1ac8d6e2983ad3b6439b2fb0c64d12cc6eb65078f591423f3314c49c9097d0cd51b17ff1358d4657d0cbfbd2f0e485a8635c94a38227f46e0ee1','2026-11-01 14:15:04','kullanici',0,NULL);
+INSERT INTO "kullanici" VALUES(4,'Test Kullanıcı 2','test2@ornek.test','scrypt:32768:8:1$uxwa1VifTwWAT4oW$7007353772dc79889af33ff221a3032e22b08817b406462901db24345b18b58d17534e885f214d3e216a6e53971b57bd6a2f81f329f873ee4dc6d8c63d10a57d','2026-11-01 14:15:04','kullanici',0,NULL);
+INSERT INTO "kullanici" VALUES(5,'Test Kullanıcı 3','test3@ornek.test','scrypt:32768:8:1$icTjxJEWk71GomQR$3366cf415c4bb3417182757052b49c73056efcfcb683982946010ae385d723dbb9835341ea5174742210d41de1e9483d989f17a48aff8cd4322b851551ee6727','2026-11-01 14:15:04','kullanici',0,NULL);
+INSERT INTO "kullanici" VALUES(6,'Test Kullanıcı 4','test4@ornek.test','scrypt:32768:8:1$7f9sI1IuiGrVcfkk$c9ab343fb326b4a2eb8c8d2672a576d6ec0434b7c841a4f4d3e501430824b6c2a2785a74ec55cbe00e36ccb3057f2a75d9c797d95fc44e451d46e9dfa8039445','2026-11-01 14:15:04','kullanici',0,NULL);
+INSERT INTO "kullanici" VALUES(7,'Test Kullanıcı 5','test5@ornek.test','scrypt:32768:8:1$R1txQY6FTjZIXntN$89f1b9d2f08a9915f02eb19c245b704bd83c809b0f29afc08d2a277a3ca97d73f8840d9aebbfeee55c4a6b6f0f61df974a75343db1df2b2142f91d3d20518288','2026-11-01 14:15:04','kullanici',0,NULL);
+INSERT INTO "kullanici" VALUES(8,'Test Kullanıcı 6','test6@ornek.test','scrypt:32768:8:1$7vVONNjq74Ebra7H$74e1f0fcc76be549de8bc99e090e03eed4713f494f830eaeb632cb04209fd07c7edaa4f233ea8eefae157d99e7e910cae885c582d17591f92bd354f96d1dfe4b','2026-11-01 14:15:04','kullanici',0,NULL);
+INSERT INTO "kullanici" VALUES(9,'Test Kullanıcı 7','test7@ornek.test','scrypt:32768:8:1$99u23KSwn9XQaINb$9232b026f9774a26b5623899de0eeab0db693e1c2b929a74836bdbf8a62c4d511d57cd4b1ce58b4d08af4fac0e534d92ead537505b8899596b64ac0560b01a73','2026-11-01 14:15:04','kullanici',0,NULL);
+INSERT INTO "kullanici" VALUES(10,'Test Kullanıcı 8','test8@ornek.test','scrypt:32768:8:1$Rk4OmHUcij7G5rh6$4855ea82d48a368bb964226191ec40d45ce79c237c149d50d820a66c4c4197a7a63c73a47cd991b5ad14110def48286cb229daff90c64732783c8cdfc6256483','2026-11-01 14:15:05','kullanici',0,NULL);
 CREATE TABLE oneri (
     id        INTEGER PRIMARY KEY AUTOINCREMENT,
     kod       TEXT NOT NULL UNIQUE,                     -- ör. UZUNLUK_ARTIR
@@ -110,6 +151,14 @@ INSERT INTO "oneri" VALUES(6,'SIZINTI_DEGISTIR','Parolanızı hemen değiştirin
 INSERT INTO "oneri" VALUES(7,'TEKRAR_KULLANMA','Her hesapta farklı parola kullanın','Bir sitede sızan parola, aynı parolayı kullandığınız tüm hesapları tehlikeye atar.','tekrar');
 INSERT INTO "oneri" VALUES(8,'PAROLA_YONETICI','Parola yöneticisi kullanın','Parola yöneticisi her site için güçlü ve benzersiz parola üretip saklar.','genel');
 INSERT INTO "oneri" VALUES(9,'IKI_FAKTOR','İki adımlı doğrulamayı açın','Parolanız ele geçirilse bile 2FA hesabınıza girilmesini engeller.','2fa');
+CREATE TABLE oturum (
+    id              INTEGER PRIMARY KEY AUTOINCREMENT,
+    kullanici_id    INTEGER NOT NULL REFERENCES kullanici(id) ON DELETE CASCADE,
+    token_ozeti     TEXT    NOT NULL UNIQUE,
+    olusturma       TEXT    NOT NULL DEFAULT (datetime('now')),
+    bitis           TEXT    NOT NULL,                        -- bu andan sonra geçersiz
+    iptal_edildi    INTEGER NOT NULL DEFAULT 0 CHECK (iptal_edildi IN (0, 1))
+);
 CREATE TABLE quiz_sonucu (
     id                 INTEGER PRIMARY KEY AUTOINCREMENT,
     kullanici_id       INTEGER NOT NULL REFERENCES kullanici(id) ON DELETE CASCADE,
@@ -119,31 +168,29 @@ CREATE TABLE quiz_sonucu (
     tamamlanma_tarihi  TEXT    NOT NULL DEFAULT (datetime('now')),
     CHECK (dogru_sayisi <= soru_sayisi)                 -- tablo düzeyinde kısıt
 );
-INSERT INTO "quiz_sonucu" VALUES(1,1,4,10,40,'2026-11-01 14:05:26');
-INSERT INTO "quiz_sonucu" VALUES(2,1,9,10,90,'2026-11-01 14:05:26');
-INSERT INTO "quiz_sonucu" VALUES(3,2,9,10,90,'2026-11-01 14:05:26');
-INSERT INTO "quiz_sonucu" VALUES(4,2,6,10,60,'2026-11-01 14:05:26');
-INSERT INTO "quiz_sonucu" VALUES(5,3,8,10,80,'2026-11-01 14:05:27');
-INSERT INTO "quiz_sonucu" VALUES(6,3,6,10,60,'2026-11-01 14:05:27');
-INSERT INTO "quiz_sonucu" VALUES(7,4,8,10,80,'2026-11-01 14:05:27');
-INSERT INTO "quiz_sonucu" VALUES(8,5,7,10,70,'2026-11-01 14:05:27');
-INSERT INTO "quiz_sonucu" VALUES(9,6,10,10,100,'2026-11-01 14:05:27');
-INSERT INTO "quiz_sonucu" VALUES(10,6,4,10,40,'2026-11-01 14:05:27');
-INSERT INTO "quiz_sonucu" VALUES(11,7,7,10,70,'2026-11-01 14:05:27');
-INSERT INTO "quiz_sonucu" VALUES(12,7,3,10,30,'2026-11-01 14:05:27');
+INSERT INTO "quiz_sonucu" VALUES(1,2,4,10,40,'2026-11-01 14:15:04');
+INSERT INTO "quiz_sonucu" VALUES(2,2,5,10,50,'2026-11-01 14:15:04');
+INSERT INTO "quiz_sonucu" VALUES(3,4,7,10,70,'2026-11-01 14:15:04');
+INSERT INTO "quiz_sonucu" VALUES(4,5,5,10,50,'2026-11-01 14:15:04');
+INSERT INTO "quiz_sonucu" VALUES(5,6,6,10,60,'2026-11-01 14:15:04');
+INSERT INTO "quiz_sonucu" VALUES(6,8,10,10,100,'2026-11-01 14:15:04');
+INSERT INTO "quiz_sonucu" VALUES(7,10,6,10,60,'2026-11-01 14:15:05');
+INSERT INTO "quiz_sonucu" VALUES(8,10,7,10,70,'2026-11-01 14:15:05');
 CREATE TABLE schema_surumu (
                surum            INTEGER PRIMARY KEY,
                dosya            TEXT NOT NULL,
                uygulanma_tarihi TEXT NOT NULL DEFAULT (datetime('now'))
            );
-INSERT INTO "schema_surumu" VALUES(1,'001_ilk_sema.sql','2026-11-01 14:05:26');
-INSERT INTO "schema_surumu" VALUES(2,'002_oneri_katalogu.sql','2026-11-01 14:05:26');
+INSERT INTO "schema_surumu" VALUES(1,'001_ilk_sema.sql','2026-11-01 14:15:03');
+INSERT INTO "schema_surumu" VALUES(2,'002_oneri_katalogu.sql','2026-11-01 14:15:03');
+INSERT INTO "schema_surumu" VALUES(3,'003_kimlik_dogrulama.sql','2026-11-01 14:15:03');
 CREATE INDEX ix_analiz_kullanici_tarih ON analiz_kaydi (kullanici_id, analiz_tarihi DESC);
 CREATE INDEX ix_analiz_oneri_oneri ON analiz_oneri (oneri_id);
 CREATE INDEX ix_quiz_kullanici ON quiz_sonucu (kullanici_id);
+CREATE INDEX ix_oturum_kullanici ON oturum (kullanici_id);
 DELETE FROM "sqlite_sequence";
 INSERT INTO "sqlite_sequence" VALUES('oneri',9);
-INSERT INTO "sqlite_sequence" VALUES('kullanici',8);
-INSERT INTO "sqlite_sequence" VALUES('analiz_kaydi',14);
-INSERT INTO "sqlite_sequence" VALUES('quiz_sonucu',12);
+INSERT INTO "sqlite_sequence" VALUES('kullanici',10);
+INSERT INTO "sqlite_sequence" VALUES('analiz_kaydi',24);
+INSERT INTO "sqlite_sequence" VALUES('quiz_sonucu',8);
 COMMIT;

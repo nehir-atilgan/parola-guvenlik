@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Yönetici · Parola Güvenliği</title>
+  <link rel="stylesheet" href="css/stil.css">
+</head>
+<body>
+  <header class="ust">
+    <a href="index.html" class="logo">🔐 Parola Güvenliği</a>
+    <nav id="menu" class="menu"></nav>
+  </header>
+
+  <main class="icerik">
+    <p id="yukleniyor">Yükleniyor…</p>
+
+    <section id="yetkisiz" class="uyari" hidden>
+      <h1>Erişim engellendi</h1>
+      <p>Bu sayfa yalnızca yöneticilere açıktır.</p>
+      <p><a href="panel.html">Panelime dön</a></p>
+    </section>
+
+    <section id="icerik" hidden>
+      <h1>Kullanıcı yönetimi</h1>
+      <p id="mesaj" class="mesaj" role="alert" hidden></p>
+      <div class="tablo-kutu">
+        <table class="tablo">
+          <thead><tr><th>#</th><th>Ad soyad</th><th>E-posta</th><th>Rol</th><th>Kayıt</th></tr></thead>
+          <tbody id="satirlar"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/oturum.js"></script>
+  <script>
+    const mesaj = document.getElementById("mesaj");
+    const goster = (metin, tur) => { mesaj.textContent = metin; mesaj.className = "mesaj " + tur; mesaj.hidden = false; };
+
+    async function tabloyuDoldur(benimId) {
+      const govde = document.getElementById("satirlar");
+      govde.innerHTML = "";
+      for (const k of await api.kullanicilar()) {
+        const tr = document.createElement("tr");
+        [k.id, k.ad_soyad, k.eposta].forEach((d) => {
+          const td = document.createElement("td"); td.textContent = d; tr.appendChild(td);
+        });
+
+        const rolTd = document.createElement("td");
+        const secim = document.createElement("select");
+        secim.innerHTML = '<option value="kullanici">Kullanıcı</option><option value="yonetici">Yönetici</option>';
+        secim.value = k.rol;
+        secim.disabled = k.id === benimId; // kendi rolünü değiştiremez
+        secim.addEventListener("change", async () => {
+          try {
+            await api.rolDegistir(k.id, secim.value);
+            goster(`${k.ad_soyad} artık ${secim.value === "yonetici" ? "yönetici" : "kullanıcı"}. Açık oturumları kapatıldı.`, "basari");
+          } catch (hata) {
+            secim.value = k.rol;
+            goster(hata.message, "hata");
+          }
+        });
+        rolTd.appendChild(secim);
+        tr.appendChild(rolTd);
+
+        const tarihTd = document.createElement("td");
+        tarihTd.textContent = k.kayit_tarihi.slice(0, 10);
+        tr.appendChild(tarihTd);
+        govde.appendChild(tr);
+      }
+    }
+
+    (async () => {
+      const sonuc = await oturum.sayfayiKoru("yonetici");
+      if (!sonuc) return;
+      document.getElementById("yukleniyor").hidden = true;
+
+      if (sonuc.yetkisiz) {
+        document.getElementById("yetkisiz").hidden = false;
+        return;
+      }
+      try {
+        await tabloyuDoldur(sonuc.bilgi.kullanici.id);
+        document.getElementById("icerik").hidden = false;
+      } catch (hata) {
+        // Backend de 403 döner: arayüz atlatılsa bile veri gelmez.
+        document.getElementById("yetkisiz").hidden = false;
+      }
+    })();
+  </script>
+</body>
+</html>

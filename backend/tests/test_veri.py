@@ -15,7 +15,7 @@ def _kullanici(con, n=1):
 
 def test_migrationlar_uygulandi(con):
     surumler = [r["dosya"] for r in con.execute("SELECT dosya FROM schema_surumu ORDER BY surum")]
-    assert surumler == ["001_ilk_sema.sql", "002_oneri_katalogu.sql"]
+    assert surumler == ["001_ilk_sema.sql", "002_oneri_katalogu.sql", "003_kimlik_dogrulama.sql"]
 
 
 def test_migration_tekrar_calismaz(con):
@@ -128,7 +128,7 @@ def test_kullanimdaki_oneri_silinemez(con):
 
 def test_ornek_veri_yuklenir_ve_kvkk_uyumludur(con):
     sonuc = ornek_veri.yukle(con)
-    assert sonuc["durum"] == "yuklendi" and sonuc["kullanici"] == 8
+    assert sonuc["durum"] == "yuklendi" and sonuc["kullanici"] == 10
     eposta_alanlari = {r[0].split("@")[1] for r in con.execute("SELECT eposta FROM kullanici")}
     assert eposta_alanlari == {"ornek.test"}  # gerçek e-posta yok
     assert ornek_veri.yukle(con)["durum"] == "atlandi"  # ikinci kez yüklenmez

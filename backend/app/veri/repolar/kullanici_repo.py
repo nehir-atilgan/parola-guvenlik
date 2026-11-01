@@ -1,11 +1,11 @@
 """kullanici tablosu için CRUD."""
 
 
-def olustur(con, ad_soyad, eposta, sifre_hash):
+def olustur(con, ad_soyad, eposta, sifre_hash, rol="kullanici"):
     """CREATE — yeni kullanıcı ekler, oluşan id'yi döndürür."""
     imlec = con.execute(
-        "INSERT INTO kullanici (ad_soyad, eposta, sifre_hash) VALUES (?, ?, ?)",
-        (ad_soyad, eposta.strip().lower(), sifre_hash),
+        "INSERT INTO kullanici (ad_soyad, eposta, sifre_hash, rol) VALUES (?, ?, ?, ?)",
+        (ad_soyad, eposta.strip().lower(), sifre_hash, rol),
     )
     con.commit()
     return imlec.lastrowid
@@ -14,7 +14,7 @@ def olustur(con, ad_soyad, eposta, sifre_hash):
 def getir(con, kullanici_id):
     """READ — tek kullanıcı (bulunamazsa None)."""
     return con.execute(
-        "SELECT id, ad_soyad, eposta, kayit_tarihi FROM kullanici WHERE id = ?",
+        "SELECT id, ad_soyad, eposta, rol, kayit_tarihi FROM kullanici WHERE id = ?",
         (kullanici_id,),
     ).fetchone()
 
@@ -29,7 +29,7 @@ def eposta_ile_getir(con, eposta):
 def listele(con):
     """READ — tüm kullanıcılar."""
     return con.execute(
-        "SELECT id, ad_soyad, eposta, kayit_tarihi FROM kullanici ORDER BY id"
+        "SELECT id, ad_soyad, eposta, rol, kayit_tarihi FROM kullanici ORDER BY id"
     ).fetchall()
 
 
@@ -57,3 +57,44 @@ def sil(con, kullanici_id):
     imlec = con.execute("DELETE FROM kullanici WHERE id = ?", (kullanici_id,))
     con.commit()
     return imlec.rowcount
+
+
+# ------------------------------------------------------------ kimlik doğrulama
+
+def rol_ata(con, kullanici_id, rol):
+    """UPDATE — kullanıcının rolünü değiştirir ('kullanici' veya 'yonetici')."""
+    imlec = con.execute("UPDATE kullanici SET rol = ? WHERE id = ?", (rol, kullanici_id))
+    con.commit()
+    return imlec.rowcount
+
+
+def kilitli_mi(con, kullanici_id):
+    satir = con.execute(
+        "SELECT kilit_bitis > datetime('now') AS kilitli FROM kullanici WHERE id = ?",
+        (kullanici_id,),
+    ).fetchone()
+    return bool(satir and satir["kilitli"])
+
+
+def basarisiz_giris_kaydet(con, kullanici_id, sinir, kilit_dakika):
+    """Hatalı girişi sayar; sayaç sınıra ulaşınca hesabı kilitler ve sayacı sıfırlar."""
+    con.execute(
+        """UPDATE kullanici
+           SET basarisiz_giris = basarisiz_giris + 1
+           WHERE id = ?""",
+        (kullanici_id,),
+    )
+    con.execute(
+        """UPDATE kullanici
+           SET kilit_bitis = datetime('now', ?), basarisiz_giris = 0
+           WHERE id = ? AND basarisiz_giris >= ?""",
+        (f"+{int(kilit_dakika)} minutes", kullanici_id, sinir),
+    )
+    con.commit()
+
+
+def basarili_giris_kaydet(con, kullanici_id):
+    con.execute(
+        "UPDATE kullanici SET basarisiz_giris = 0, kilit_bitis = NULL WHERE id = ?", (kullanici_id,)
+    )
+    con.commit()

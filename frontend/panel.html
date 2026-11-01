@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Panelim · Parola Güvenliği</title>
+  <link rel="stylesheet" href="css/stil.css">
+</head>
+<body>
+  <header class="ust">
+    <a href="index.html" class="logo">🔐 Parola Güvenliği</a>
+    <nav id="menu" class="menu"></nav>
+  </header>
+
+  <main class="icerik">
+    <p id="yukleniyor">Yükleniyor…</p>
+    <div id="icerik" hidden>
+      <h1>Merhaba, <span id="ad"></span></h1>
+      <p class="soluk"><span id="eposta"></span> · Rol: <span id="rol" class="rozet"></span></p>
+      <p class="soluk kucuk">Oturumunuz <span id="bitis"></span> tarihinde sona erecek.</p>
+
+      <div class="kartlar">
+        <article class="kart">
+          <h2>Son analizlerim</h2>
+          <ul id="analizler" class="liste"></ul>
+        </article>
+        <article class="kart">
+          <h2>En iyi quiz puanım</h2>
+          <p id="quiz" class="buyuk-sayi">–</p>
+        </article>
+      </div>
+    </div>
+  </main>
+
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/oturum.js"></script>
+  <script>
+    const SEVIYE = { zayif: "Zayıf", orta: "Orta", guclu: "Güçlü" };
+
+    (async () => {
+      const sonuc = await oturum.sayfayiKoru(); // giriş yoksa giris.html'e yönlendirir
+      if (!sonuc) return;
+      const { kullanici, son_analizler, en_iyi_quiz_puani, oturum_bitis } = sonuc.bilgi;
+
+      document.getElementById("ad").textContent = kullanici.ad_soyad;
+      document.getElementById("eposta").textContent = kullanici.eposta;
+      document.getElementById("rol").textContent = kullanici.rol === "yonetici" ? "Yönetici" : "Kullanıcı";
+      document.getElementById("bitis").textContent = new Date(oturum_bitis.replace(" ", "T").replace(" UTC", "Z")).toLocaleString("tr-TR");
+      const quiz = document.getElementById("quiz");
+      if (en_iyi_quiz_puani === null) {
+        quiz.textContent = "Henüz quiz çözülmedi.";
+        quiz.className = "soluk";
+      } else {
+        quiz.textContent = en_iyi_quiz_puani + " / 100";
+      }
+
+      const liste = document.getElementById("analizler");
+      if (son_analizler.length === 0) {
+        liste.innerHTML = "<li>Henüz analiz yapılmadı.</li>";
+      }
+      son_analizler.forEach((a) => {
+        const li = document.createElement("li");
+        li.textContent = `Skor ${a.skor} · ${SEVIYE[a.seviye]}` + (a.sizinti_sayisi ? ` · ⚠ ${a.sizinti_sayisi.toLocaleString("tr-TR")} sızıntı` : "");
+        liste.appendChild(li);
+      });
+
+      document.getElementById("yukleniyor").hidden = true;
+      document.getElementById("icerik").hidden = false;
+    })();
+  </script>
+</body>
+</html>

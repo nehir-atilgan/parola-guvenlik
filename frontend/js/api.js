@@ -1,18 +1,40 @@
 // Backend ile konuşan tek dosya. Sayfalar backend'e doğrudan değil, bu fonksiyonlar üzerinden erişir.
+
+class ApiHatasi extends Error {
+  constructor(mesaj, durum) {
+    super(mesaj);
+    this.durum = durum; // 401: giriş yok/süre doldu, 403: yetki yok
+  }
+}
+
 const api = {
-  async istek(yol, secenekler = {}) {
+  async istek(yol, { yontem = "GET", govde } = {}) {
+    const basliklar = {};
     // Content-Type yalnızca gövde gönderilirken eklenir (gereksiz CORS ön-isteğini önler).
-    const basliklar = secenekler.body ? { "Content-Type": "application/json" } : {};
-    const yanit = await fetch(API_URL + yol, { ...secenekler, headers: basliklar });
-    if (!yanit.ok) throw new Error("Sunucu hatası: " + yanit.status);
-    return yanit.json();
+    if (govde !== undefined) basliklar["Content-Type"] = "application/json";
+    const token = oturum.token();
+    if (token) basliklar["Authorization"] = "Bearer " + token;
+
+    const yanit = await fetch(API_URL + yol, {
+      method: yontem,
+      headers: basliklar,
+      body: govde !== undefined ? JSON.stringify(govde) : undefined,
+    });
+    const veri = await yanit.json().catch(() => ({}));
+    if (!yanit.ok) throw new ApiHatasi(veri.hata || "Sunucu hatası: " + yanit.status, yanit.status);
+    return veri;
   },
 
-  saglik() {
-    return this.istek("/saglik");
-  },
+  saglik: () => api.istek("/saglik"),
+  moduller: () => api.istek("/moduller"),
 
-  moduller() {
-    return this.istek("/moduller");
-  },
+  // Kimlik doğrulama
+  kayit: (ad_soyad, eposta, parola) => api.istek("/kayit", { yontem: "POST", govde: { ad_soyad, eposta, parola } }),
+  giris: (eposta, parola) => api.istek("/giris", { yontem: "POST", govde: { eposta, parola } }),
+  cikis: () => api.istek("/cikis", { yontem: "POST" }),
+  ben: () => api.istek("/ben"),
+
+  // Yönetici
+  kullanicilar: () => api.istek("/yonetici/kullanicilar"),
+  rolDegistir: (id, rol) => api.istek(`/yonetici/kullanicilar/${id}/rol`, { yontem: "PATCH", govde: { rol } }),
 };

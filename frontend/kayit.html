@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kayıt Ol · Parola Güvenliği</title>
+  <link rel="stylesheet" href="css/stil.css">
+</head>
+<body>
+  <header class="ust">
+    <a href="index.html" class="logo">🔐 Parola Güvenliği</a>
+    <nav id="menu" class="menu"></nav>
+  </header>
+
+  <main class="icerik dar">
+    <h1>Kayıt ol</h1>
+    <form id="kayit-formu" class="form" novalidate>
+      <label>Ad soyad
+        <input name="ad_soyad" autocomplete="name" required minlength="2">
+      </label>
+      <label>E-posta
+        <input name="eposta" type="email" autocomplete="email" required>
+      </label>
+      <label>Parola
+        <input name="parola" type="password" autocomplete="new-password" required minlength="8">
+        <small>En az 8 karakter, en az bir harf ve bir rakam.</small>
+      </label>
+      <label>Parola (tekrar)
+        <input name="parola2" type="password" autocomplete="new-password" required>
+      </label>
+      <p id="mesaj" class="mesaj" role="alert" hidden></p>
+      <button type="submit" class="btn">Kayıt ol</button>
+      <p class="alt-bag">Hesabınız var mı? <a href="giris.html">Giriş yapın</a></p>
+    </form>
+  </main>
+
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/oturum.js"></script>
+  <script>
+    const form = document.getElementById("kayit-formu");
+    const mesaj = document.getElementById("mesaj");
+    const goster = (metin, tur) => { mesaj.textContent = metin; mesaj.className = "mesaj " + tur; mesaj.hidden = false; };
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const v = Object.fromEntries(new FormData(form));
+      if (v.parola !== v.parola2) return goster("Parolalar eşleşmiyor.", "hata");
+
+      const btn = form.querySelector("button");
+      btn.disabled = true;
+      try {
+        await api.kayit(v.ad_soyad, v.eposta, v.parola);
+        location.href = "giris.html?neden=kayit&eposta=" + encodeURIComponent(v.eposta);
+      } catch (hata) {
+        goster(hata.message, "hata");
+      } finally {
+        btn.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>

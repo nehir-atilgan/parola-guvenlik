@@ -63,6 +63,14 @@ flowchart TB
 | GET | `/api/saglik` | `{"durum": "calisiyor", "veritabani": "bagli"}` |
 | GET | `/api/moduller` | Sitedeki modüllerin listesi |
 | GET | `/api/oneriler` | Veritabanındaki öneri kataloğu (Hafta 4) |
+| POST | `/api/kayit` | Yeni hesap (rol her zaman `kullanici`) |
+| POST | `/api/giris` | Token + kullanıcı bilgisi |
+| POST | `/api/cikis` | 🔒 Oturumu sunucuda iptal eder |
+| GET | `/api/ben` | 🔒 Giriş yapan kullanıcı ve özet bilgileri |
+| GET | `/api/yonetici/kullanicilar` | 🔒👑 Tüm kullanıcılar |
+| PATCH | `/api/yonetici/kullanicilar/<id>/rol` | 🔒👑 Rol değiştirir |
+
+🔒 giriş gerekli (`Authorization: Bearer <token>`, yoksa `401`) · 👑 yalnızca yönetici (değilse `403`)
 
 ## Neden frontend ve backend ayrıldı?
 

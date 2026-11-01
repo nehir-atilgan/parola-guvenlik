@@ -14,6 +14,12 @@ from app.veri.repolar import analiz_repo, kullanici_repo, oneri_repo, quiz_repo
 
 KULLANICI_SAYISI = 8
 
+# Arayüzü denemek için parolası bilinen iki DEMO hesabı (yalnızca yerel geliştirme içindir).
+DEMO_HESAPLARI = [
+    {"ad_soyad": "Demo Yönetici", "eposta": "yonetici@ornek.test", "parola": "Yonetici123", "rol": "yonetici"},
+    {"ad_soyad": "Demo Kullanıcı", "eposta": "kullanici@ornek.test", "parola": "Kullanici123", "rol": "kullanici"},
+]
+
 
 def _seviye(skor):
     return "zayif" if skor < 40 else "orta" if skor < 70 else "guclu"
@@ -45,13 +51,15 @@ def yukle(con, tohum=42):
     oneri_idleri = {o["kod"]: o["id"] for o in oneri_repo.listele(con)}
     sayac = {"kullanici": 0, "analiz": 0, "analiz_oneri": 0, "quiz": 0}
 
-    for n in range(1, KULLANICI_SAYISI + 1):
-        kid = kullanici_repo.olustur(
-            con,
-            ad_soyad=f"Test Kullanıcı {n}",
-            eposta=f"test{n}@ornek.test",
-            sifre_hash=generate_password_hash(f"OrnekGiris-{n}-{rnd.random()}"),
-        )
+    hesaplar = [
+        (h["ad_soyad"], h["eposta"], h["parola"], h["rol"]) for h in DEMO_HESAPLARI
+    ] + [
+        (f"Test Kullanıcı {n}", f"test{n}@ornek.test", f"OrnekGiris-{n}-{rnd.random()}", "kullanici")
+        for n in range(1, KULLANICI_SAYISI + 1)
+    ]
+
+    for ad_soyad, eposta, parola, rol in hesaplar:
+        kid = kullanici_repo.olustur(con, ad_soyad, eposta, generate_password_hash(parola), rol)
         sayac["kullanici"] += 1
 
         for _ in range(rnd.randint(1, 4)):

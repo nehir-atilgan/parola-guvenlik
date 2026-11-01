@@ -4,6 +4,7 @@
 erDiagram
     KULLANICI ||--o{ ANALIZ_KAYDI : "yapar"
     KULLANICI ||--o{ QUIZ_SONUCU : "alır"
+    KULLANICI ||--o{ OTURUM : "açar"
     ANALIZ_KAYDI ||--o{ ANALIZ_ONERI : "içerir"
     ONERI ||--o{ ANALIZ_ONERI : "kullanılır"
 
@@ -12,6 +13,9 @@ erDiagram
         string ad_soyad
         string eposta UK
         string sifre_hash
+        string rol "kullanici | yonetici"
+        int basarisiz_giris
+        datetime kilit_bitis
         datetime kayit_tarihi
     }
     ANALIZ_KAYDI {
@@ -48,6 +52,14 @@ erDiagram
         int puan
         datetime tamamlanma_tarihi
     }
+    OTURUM {
+        int id PK
+        int kullanici_id FK
+        string token_ozeti UK
+        datetime olusturma
+        datetime bitis
+        bool iptal_edildi
+    }
 ```
 
 ## Varlıklar
@@ -59,6 +71,7 @@ erDiagram
 | **Öneri** | Tekrar kullanılabilir öneri kataloğu (ör. "Parolayı 12+ karakter yap") | `id` |
 | **Analiz–Öneri** | Bir analize hangi önerilerin verildiğini tutan ara tablo | (`analiz_id`, `oneri_id`) bileşik |
 | **Quiz Sonucu** | Kullanıcının farkındalık quizindeki puanı | `id` |
+| **Oturum** | Giriş yapan kullanıcının oturumu; token'ın yalnızca özeti saklanır (Hafta 5) | `id` |
 
 ## İlişkiler
 
@@ -66,6 +79,7 @@ erDiagram
 |---|---|---|
 | Kullanıcı → Analiz Kaydı | **1-N** | Bir kullanıcı çok sayıda analiz yapabilir; her analiz tek kullanıcıya aittir. |
 | Kullanıcı → Quiz Sonucu | **1-N** | Bir kullanıcı quizi birden çok kez çözebilir. |
+| Kullanıcı → Oturum | **1-N** | Bir kullanıcı farklı cihazlardan birden çok oturum açabilir. |
 | Analiz Kaydı ↔ Öneri | **N-N** | Bir analize birden çok öneri verilir; aynı öneri birçok analizde kullanılır. `analiz_oneri` ara tablosuyla çözülür. |
 
 > **1-1 örneği (projede kullanılmadı):** İleride her kullanıcıya tek bir "Güvenlik Profili" (2FA açık mı, son rapor tarihi vb.) eklenirse Kullanıcı ↔ Profil ilişkisi 1-1 olur.

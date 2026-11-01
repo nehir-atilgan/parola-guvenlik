@@ -19,6 +19,7 @@ Bireysel kullanıcılar ve kurum çalışanları.
 | Parola gücü analizi | ⏳ Planlandı |
 | Sızıntı kontrolü (Have I Been Pwned API) | ⏳ Planlandı |
 | Öneri ve rehber (yapay zekâ destekli) | ⏳ Planlandı |
+| Kayıt, giriş ve rol tabanlı erişim | ✅ Hafta 5 |
 | Farkındalık quizi | ⏳ Planlandı |
 | Kişisel skor ve rapor | ⏳ Planlandı |
 
@@ -37,8 +38,8 @@ parola-guvenlik/
 │   ├── app/
 │   │   ├── __init__.py          #   Uygulama fabrikası + CORS
 │   │   ├── config.py            #   Ayarlar (.env'den okunur)
-│   │   ├── api/                 #   API KATMANI: /api/... uç noktaları
-│   │   ├── servisler/           #   İŞ KATMANI: analiz, sızıntı, öneri, quiz, rapor
+│   │   ├── api/                 #   API KATMANI: /api/... uç noktaları, yetki.py (401/403)
+│   │   ├── servisler/           #   İŞ KATMANI: kimlik_servisi (kayıt/giriş/oturum), ...
 │   │   └── veri/                #   VERİ KATMANI
 │   │       ├── migrations/      #     Sürümlü şema dosyaları (001, 002 ...)
 │   │       ├── migrator.py      #     Migration çalıştırıcısı
@@ -49,16 +50,21 @@ parola-guvenlik/
 │   ├── requirements.txt
 │   └── run.py                   #   Backend'i başlatır
 ├── frontend/                    # FRONTEND — web sitesi
-│   ├── index.html
+│   ├── index.html               #   Ana sayfa
+│   ├── kayit.html / giris.html  #   Kayıt ve giriş
+│   ├── panel.html               #   Kullanıcı paneli (giriş gerekli)
+│   ├── yonetici.html            #   Kullanıcı yönetimi (yalnızca yönetici)
 │   ├── css/stil.css
 │   └── js/
 │       ├── config.js            #   Backend adresi
 │       ├── api.js               #   Backend ile konuşan tek dosya
+│       ├── oturum.js            #   Token saklama, menü, sayfa koruma
 │       └── app.js               #   Sayfa mantığı
 └── docs/
     ├── er_diyagrami.md          # ER diyagramı + normalizasyon
     ├── mimari.md                # Mimari şema
     ├── veritabani.md            # Kısıtlar, indeksler, migration, CRUD açıklaması
+    ├── guvenlik_notu.md         # Hash/tuz, oturum, rol tabanlı erişim, OWASP
     ├── ornek_sorgular.sql       # Örnek veriyle çalışan sorgular
     └── ornek_veri_dokumu.sql    # Örnek veriyle dolu veritabanının dökümü
 ```
@@ -86,7 +92,18 @@ cd frontend
 python -m http.server 8000     # http://127.0.0.1:8000
 ```
 
-Tarayıcıda **http://127.0.0.1:8000** adresini açın. Sağ üstte "● Backend bağlı" yazısı görünmelidir.
+Tarayıcıda **http://127.0.0.1:8000** adresini açın. "● Backend bağlı" yazısı görünmelidir.
+
+> ⚠️ Frontend'i **127.0.0.1:8000** adresinden açın. `localhost:8000` da izinlidir; dosyayı çift tıklayarak (`file://`) açarsanız backend bağlantısı çalışmaz.
+
+**Demo hesapları** (`ornek-veri` komutuyla oluşur, yalnızca yerel geliştirme içindir):
+
+| Rol | E-posta | Parola |
+|---|---|---|
+| Yönetici | `yonetici@ornek.test` | `Yonetici123` |
+| Kullanıcı | `kullanici@ornek.test` | `Kullanici123` |
+
+Kendi hesabınızı yönetici yapmak için: `flask --app run yonetici-yap eposta@adres`
 
 Backend testleri: `backend` klasöründe `pytest`
 
@@ -100,6 +117,7 @@ Veritabanı ilk çalıştırmada `backend/instance/parola_guvenlik.db` olarak ot
 - [Mimari şema](docs/mimari.md)
 - [Veritabanı tasarımı ve veri erişim katmanı](docs/veritabani.md)
 - [Örnek sorgular](docs/ornek_sorgular.sql)
+- [Güvenlik notu (kimlik doğrulama ve yetkilendirme)](docs/guvenlik_notu.md)
 
 ## Gizlilik ilkesi
 
@@ -111,3 +129,4 @@ Analiz edilen parolalar **hiçbir zaman saklanmaz**. Sızıntı kontrolünde par
 |---|---|---|
 | 3 | Kurulum, mimari ve veri modeli | ✅ |
 | 4 | Veritabanı tasarımı ve veri erişim katmanı | ✅ |
+| 5 | Kullanıcı yönetimi ve kimlik doğrulama | ✅ |

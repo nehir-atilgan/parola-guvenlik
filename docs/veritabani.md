@@ -107,7 +107,7 @@ con.commit()
 
 ## Örnek (sentetik) veri — KVKK uyumu
 
-`flask --app run ornek-veri` komutu 8 kullanıcı, 14 analiz, 42 analiz–öneri eşleşmesi ve 12 quiz sonucu üretir.
+`flask --app run ornek-veri` komutu 10 kullanıcı (2 demo hesabı + 8 test kullanıcısı), 24 analiz, 68 analiz–öneri eşleşmesi ve 8 quiz sonucu üretir.
 
 - Adlar "Test Kullanıcı N" şeklindedir; e-postalar `@ornek.test` alan adındadır. `.test` alan adı internette ayrılmıştır ve gerçek posta alamaz.
 - Analiz kayıtları gerçek parolalardan değil, rastgele üretilmiş ölçümlerden oluşur.

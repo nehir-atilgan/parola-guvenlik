@@ -12,7 +12,11 @@ class Config:
     SECRET_KEY = os.getenv("SECRET_KEY", "gelistirme-anahtari-degistirin")
     # SQLite veritabanı dosyası (yoksa otomatik oluşturulur)
     VERITABANI = os.getenv("VERITABANI") or os.path.join(BACKEND_KLASORU, "instance", "parola_guvenlik.db")
-    HIBP_API_URL = os.getenv("HIBP_API_URL", "https://api.pwnedpasswords.com/range/")
+    # Kimlik doğrulama
+    OTURUM_SURESI_DAKIKA = int(os.getenv("OTURUM_SURESI_DAKIKA", "120"))  # token 2 saat geçerli
+    GIRIS_DENEME_SINIRI = 5        # art arda bu kadar hatalı girişte hesap kilitlenir
+    KILIT_SURESI_DAKIKA = 15
+    HIBP_API_URL =os.getenv("HIBP_API_URL", "https://api.pwnedpasswords.com/range/")
     LLM_API_KEY = os.getenv("LLM_API_KEY", "")
     # Backend'e istek atmasına izin verilen frontend adresleri (virgülle ayrılır)
     FRONTEND_ORIGINS = [
