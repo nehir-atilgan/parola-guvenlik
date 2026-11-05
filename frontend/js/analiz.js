@@ -61,6 +61,11 @@ function sonucuGoster(s) {
   s.oneriler.forEach((o) => {
     const li = document.createElement("li");
     li.append(eleman("strong", o.baslik), eleman("p", o.aciklama, "soluk kucuk"));
+    if (o.rehber_slug) {
+      const a = eleman("a", "Rehberde oku →", "kucuk");
+      a.href = "rehber.html?konu=" + encodeURIComponent(o.rehber_slug);
+      li.appendChild(a);
+    }
     oneriler.appendChild(li);
   });
 

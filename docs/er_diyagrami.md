@@ -5,6 +5,13 @@ erDiagram
     KULLANICI ||--o{ ANALIZ_KAYDI : "yapar"
     KULLANICI ||--o{ QUIZ_SONUCU : "alır"
     KULLANICI ||--o{ OTURUM : "açar"
+    REHBER_KONU ||--o{ QUIZ_SORU : "içerir"
+    QUIZ_SORU ||--|{ QUIZ_SECENEK : "seçenekleri"
+    REHBER_KONU ||--o{ ONERI : "anlatır"
+    KULLANICI ||--o{ QUIZ_DENEME : "başlatır"
+    QUIZ_DENEME ||--|{ QUIZ_DENEME_SORU : "soruları"
+    QUIZ_SORU ||--o{ QUIZ_DENEME_SORU : "sorulur"
+    QUIZ_DENEME |o--o| QUIZ_SONUCU : "sonucu"
     ANALIZ_KAYDI ||--o{ ANALIZ_ONERI : "içerir"
     ONERI ||--o{ ANALIZ_ONERI : "kullanılır"
 
@@ -73,6 +80,12 @@ erDiagram
 | **Analiz–Öneri** | Bir analize hangi önerilerin verildiğini tutan ara tablo | (`analiz_id`, `oneri_id`) bileşik |
 | **Quiz Sonucu** | Kullanıcının farkındalık quizindeki puanı | `id` |
 | **Oturum** | Giriş yapan kullanıcının oturumu; token'ın yalnızca özeti saklanır (Hafta 5) | `id` |
+| **Rehber Konusu** | Farkındalık rehberindeki bir konu (Hafta 7) | `id` (`slug` benzersiz) |
+| **Quiz Sorusu / Seçeneği** | Soru bankası; her sorunun 4 seçeneği ve tek doğru cevabı vardır (Hafta 7) | `id` |
+| **Quiz Denemesi** | Başlatılmış bir quiz; süre sınırı ve sonucu (Hafta 7) | `id` |
+| **Deneme–Soru** | Denemede sorulan sorular ve verilen cevaplar (ara tablo, Hafta 7) | (`deneme_id`, `soru_id`) bileşik |
+
+> Hafta 7 tablolarının sütunları ve kısıtları: [rehber_quiz.md](rehber_quiz.md) · `migrations/005_rehber_quiz.sql`
 
 ## İlişkiler
 

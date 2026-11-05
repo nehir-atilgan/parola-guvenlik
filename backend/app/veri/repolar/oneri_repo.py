@@ -18,6 +18,16 @@ def listele(con, kategori=None):
     return con.execute("SELECT * FROM oneri ORDER BY id").fetchall()
 
 
+def rehber_baglantili_liste(con):
+    """Öneri kataloğu + her önerinin bağlı olduğu rehber konusunun slug'ı (LEFT JOIN: bağı olmayan da gelir)."""
+    return con.execute(
+        """SELECT o.*, k.slug AS rehber_slug
+           FROM oneri AS o
+           LEFT JOIN rehber_konu AS k ON k.id = o.rehber_konu_id
+           ORDER BY o.id"""
+    ).fetchall()
+
+
 def kod_ile_getir(con, kod):
     return con.execute("SELECT * FROM oneri WHERE kod = ?", (kod,)).fetchone()
 

@@ -4,8 +4,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   const kutu = document.getElementById("moduller");
 
   try {
-    await api.saglik();
-    durum.textContent = "● Backend bağlı";
+    const saglik = await api.saglik();
+    durum.textContent = "● Backend bağlı · sürüm " + saglik.surum;
     durum.classList.add("bagli");
 
     const moduller = await api.moduller();
@@ -15,7 +15,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     durum.textContent = "● Backend'e ulaşılamadı";
     durum.classList.add("hata");
     kutu.innerHTML =
-      '<p class="uyari">Backend çalışmıyor. <code>backend</code> klasöründe <code>python run.py</code> komutunu çalıştırın.</p>';
+      location.hostname === "127.0.0.1" || location.hostname === "localhost"
+        ? '<p class="uyari">Backend çalışmıyor. <code>backend</code> klasöründe <code>python run.py</code> komutunu çalıştırın.</p>'
+        : '<p class="uyari">Sunucu şu anda uyanıyor olabilir (ücretsiz sunucu bir süre kullanılmayınca uykuya geçer). Yaklaşık bir dakika sonra sayfayı yenileyin.</p>';
   }
 });
 

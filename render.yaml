@@ -1,0 +1,21 @@
+# Render.com yayın tanımı (Blueprint). README'deki "Deploy to Render" düğmesi bu dosyayı kullanır.
+# Tek bir web servisi: Flask hem API'yi (/api/...) hem de frontend dosyalarını sunar.
+services:
+  - type: web
+    name: parola-guvenlik
+    runtime: python
+    plan: free
+    region: frankfurt
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    # SQLite tek dosya olduğu için tek işlem (worker) + çoklu iş parçacığı (thread) kullanılır.
+    startCommand: gunicorn run:app --workers 1 --threads 4 --bind 0.0.0.0:$PORT
+    healthCheckPath: /api/saglik
+    autoDeploy: true
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12.8"
+      - key: SECRET_KEY
+        generateValue: true
+      - key: ORNEK_VERI
+        value: "1"

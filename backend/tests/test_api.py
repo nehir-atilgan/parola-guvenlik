@@ -1,5 +1,5 @@
 def test_saglik_kontrolu(istemci):
-    assert istemci.get("/api/saglik").get_json() == {"durum": "calisiyor", "veritabani": "bagli"}
+    assert istemci.get("/api/saglik").get_json() == {"durum": "calisiyor", "veritabani": "bagli", "surum": "0.8.0"}
 
 
 def test_moduller_listesi(istemci):

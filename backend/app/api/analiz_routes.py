@@ -25,9 +25,10 @@ def analiz_hatasi(hata):
 
 
 def _oneri_detaylari(con, kodlar):
-    katalog = {o["kod"]: o for o in oneri_repo.listele(con)}
+    katalog = {o["kod"]: o for o in oneri_repo.rehber_baglantili_liste(con)}
     return [
-        {"oncelik": i, "kod": k, "baslik": katalog[k]["baslik"], "aciklama": katalog[k]["aciklama"]}
+        {"oncelik": i, "kod": k, "baslik": katalog[k]["baslik"], "aciklama": katalog[k]["aciklama"],
+         "rehber_slug": katalog[k]["rehber_slug"]}
         for i, k in enumerate(kodlar, start=1) if k in katalog
     ]
 

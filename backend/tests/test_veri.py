@@ -15,7 +15,8 @@ def _kullanici(con, n=1):
 
 def test_migrationlar_uygulandi(con):
     surumler = [r["dosya"] for r in con.execute("SELECT dosya FROM schema_surumu ORDER BY surum")]
-    assert surumler == ["001_ilk_sema.sql", "002_oneri_katalogu.sql", "003_kimlik_dogrulama.sql", "004_parola_analizi.sql"]
+    assert surumler == ["001_ilk_sema.sql", "002_oneri_katalogu.sql", "003_kimlik_dogrulama.sql", "004_parola_analizi.sql",
+                        "005_rehber_quiz.sql", "006_rehber_icerigi.sql"]
 
 
 def test_migration_tekrar_calismaz(con):

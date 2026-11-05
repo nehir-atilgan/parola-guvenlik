@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Farkındalık Quizi · Parola Güvenliği</title>
+  <link rel="stylesheet" href="css/stil.css">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Ctext y=%22.9em%22 font-size=%2290%22%3E%F0%9F%94%90%3C/text%3E%3C/svg%3E">
+</head>
+<body>
+  <header class="ust">
+    <a href="index.html" class="logo">🔐 Parola Güvenliği</a>
+    <nav id="menu" class="menu"></nav>
+  </header>
+
+  <main class="icerik">
+    <p id="yukleniyor">Yükleniyor…</p>
+    <p id="mesaj" class="mesaj hata" role="alert" hidden></p>
+
+    <!-- 1) Giriş ekranı -->
+    <section id="giris-ekrani" hidden>
+      <h1>Farkındalık Quizi</h1>
+      <div class="kartlar uc">
+        <article class="kart"><p class="soluk kucuk">Soru</p><p class="orta-sayi">10</p></article>
+        <article class="kart"><p class="soluk kucuk">Süre</p><p class="orta-sayi">30 dakika</p></article>
+        <article class="kart"><p class="soluk kucuk">Kapsam</p><p class="orta-sayi">7 rehber konusu</p></article>
+      </div>
+      <p class="soluk">Her quizde rehberin her konusundan en az bir soru çıkar. Cevaplarınızı gönderdikten sonra
+        her sorunun doğru cevabını ve açıklamasını görürsünüz. Hazırlanmak için <a href="rehber.html">rehberi</a> okuyabilirsiniz.</p>
+      <button type="button" id="baslat" class="btn genis-degil">Quizi başlat</button>
+
+      <section id="gecmis-bolum" hidden>
+        <h2>Önceki sonuçlarım</h2>
+        <div class="tablo-kutu">
+          <table class="tablo">
+            <thead><tr><th>Tarih</th><th>Puan</th><th>Doğru</th><th></th></tr></thead>
+            <tbody id="gecmis"></tbody>
+          </table>
+        </div>
+      </section>
+    </section>
+
+    <!-- 2) Soru ekranı -->
+    <section id="soru-ekrani" hidden>
+      <div class="quiz-ust">
+        <span id="ilerleme-metin" class="soluk"></span>
+        <span id="sayac" class="sayac" aria-live="off"></span>
+      </div>
+      <div class="cubuk"><div id="ilerleme" class="guclu"></div></div>
+      <form id="soru-formu" class="form soru-kart">
+        <fieldset>
+          <legend id="soru-metin"></legend>
+          <div id="secenekler" class="secenekler"></div>
+        </fieldset>
+        <div class="soru-dugmeler">
+          <button type="button" id="onceki" class="metin-btn">← Önceki</button>
+          <button type="button" id="sonraki" class="btn">Sonraki →</button>
+          <button type="submit" id="gonder" class="btn" hidden>Cevapları gönder</button>
+        </div>
+      </form>
+      <div id="soru-noktalari" class="soru-noktalari" aria-label="Sorular"></div>
+    </section>
+
+    <!-- 3) Sonuç ekranı -->
+    <section id="sonuc-ekrani" hidden>
+      <h1>Quiz sonucu</h1>
+      <div class="skor-ust">
+        <div>
+          <p class="soluk kucuk">Puanınız</p>
+          <p class="skor"><span id="puan"></span><span class="soluk"> / 100</span></p>
+        </div>
+        <span id="dogru-sayisi" class="seviye"></span>
+      </div>
+      <div class="cubuk"><div id="puan-cubuk"></div></div>
+      <p id="degerlendirme"></p>
+
+      <section id="tekrar-bolum" class="kisaca" hidden>
+        <h2>Tekrar okumanızı önerdiğimiz konular</h2>
+        <ul id="tekrar-konular"></ul>
+      </section>
+
+      <h2>Soru soru değerlendirme</h2>
+      <ol id="degerlendirme-listesi" class="degerlendirme-listesi"></ol>
+
+      <div class="konu-cta">
+        <button type="button" id="yeni-quiz" class="btn">Yeni quiz başlat</button>
+        <a class="metin-btn" href="panel.html">Panelime dön</a>
+      </div>
+    </section>
+  </main>
+
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/oturum.js"></script>
+  <script src="js/quiz.js"></script>
+</body>
+</html>

@@ -39,6 +39,14 @@ const api = {
   analizlerim: () => api.istek("/analizler"),
   analizSil: (id) => api.istek(`/analizler/${id}`, { yontem: "DELETE" }),
 
+  // Farkındalık Rehberi ve Quiz
+  rehber: () => api.istek("/rehber"),
+  rehberKonusu: (slug) => api.istek("/rehber/" + encodeURIComponent(slug)),
+  quizBaslat: () => api.istek("/quiz/baslat", { yontem: "POST" }),
+  quizGetir: (id) => api.istek(`/quiz/${id}`),
+  quizGonder: (id, cevaplar) => api.istek(`/quiz/${id}/gonder`, { yontem: "POST", govde: { cevaplar } }),
+  quizGecmisi: () => api.istek("/quiz/gecmis"),
+
   // Yönetici
   kullanicilar: () => api.istek("/yonetici/kullanicilar"),
   rolDegistir: (id, rol) => api.istek(`/yonetici/kullanicilar/${id}/rol`, { yontem: "PATCH", govde: { rol } }),
