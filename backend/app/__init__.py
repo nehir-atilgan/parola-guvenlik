@@ -21,10 +21,12 @@ def create_app(config_class=Config, **ayarlar):
         con.close()
 
     # API katmanı
+    from app.api.analiz_routes import bp as analiz_bp
     from app.api.kimlik_routes import bp as kimlik_bp
     from app.api.routes import bp as api_bp
     app.register_blueprint(api_bp)
     app.register_blueprint(kimlik_bp)
+    app.register_blueprint(analiz_bp)
 
     # CORS: yalnızca izin verilen frontend adreslerinden gelen isteklere yanıt ver
     @app.after_request

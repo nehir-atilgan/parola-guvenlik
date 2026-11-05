@@ -61,10 +61,11 @@ function menuCiz() {
   const baglanti = (href, metin) => `<a href="${href}">${metin}</a>`;
 
   if (!k) {
-    menu.innerHTML = baglanti("giris.html", "Giriş yap") + baglanti("kayit.html", "Kayıt ol");
+    menu.innerHTML = baglanti("analiz.html", "Parola Analizi") + baglanti("giris.html", "Giriş yap") + baglanti("kayit.html", "Kayıt ol");
     return;
   }
   menu.innerHTML =
+    baglanti("analiz.html", "Parola Analizi") +
     baglanti("panel.html", "Panelim") +
     (k.rol === "yonetici" ? baglanti("yonetici.html", "Yönetici") : "") +
     `<span class="kim"></span><button type="button" id="cikis-btn" class="metin-btn">Çıkış</button>`;

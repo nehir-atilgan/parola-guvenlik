@@ -69,6 +69,10 @@ flowchart TB
 | GET | `/api/ben` | 🔒 Giriş yapan kullanıcı ve özet bilgileri |
 | GET | `/api/yonetici/kullanicilar` | 🔒👑 Tüm kullanıcılar |
 | PATCH | `/api/yonetici/kullanicilar/<id>/rol` | 🔒👑 Rol değiştirir |
+| POST | `/api/analiz` | Parola gücü analizi (`kaydet: true` için 🔒) |
+| GET | `/api/analizler` | 🔒 Kendi analiz geçmişi |
+| GET | `/api/analizler/<id>` | 🔒 Kendi analizi + önerileri (başkasınınki 404) |
+| DELETE | `/api/analizler/<id>` | 🔒 Kendi analizini siler (başkasınınki 404) |
 
 🔒 giriş gerekli (`Authorization: Bearer <token>`, yoksa `401`) · 👑 yalnızca yönetici (değilse `403`)
 

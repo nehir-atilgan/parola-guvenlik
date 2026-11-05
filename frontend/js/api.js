@@ -34,6 +34,11 @@ const api = {
   cikis: () => api.istek("/cikis", { yontem: "POST" }),
   ben: () => api.istek("/ben"),
 
+  // Parola Gücü Analizi
+  analiz: (parola, kaydet = false) => api.istek("/analiz", { yontem: "POST", govde: { parola, kaydet } }),
+  analizlerim: () => api.istek("/analizler"),
+  analizSil: (id) => api.istek(`/analizler/${id}`, { yontem: "DELETE" }),
+
   // Yönetici
   kullanicilar: () => api.istek("/yonetici/kullanicilar"),
   rolDegistir: (id, rol) => api.istek(`/yonetici/kullanicilar/${id}/rol`, { yontem: "PATCH", govde: { rol } }),

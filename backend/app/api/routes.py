@@ -7,7 +7,7 @@ bp = Blueprint("api", __name__, url_prefix="/api")
 
 # Sitenin modülleri; ilerleyen haftalarda her biri kendi uç noktasına kavuşacak.
 MODULLER = [
-    {"kod": "analiz", "ad": "Parola Gücü Analizi", "aciklama": "Parolanızın ne kadar güçlü olduğunu ölçün."},
+    {"kod": "analiz", "ad": "Parola Gücü Analizi", "aciklama": "Parolanızın ne kadar güçlü olduğunu ölçün.", "sayfa": "analiz.html"},
     {"kod": "sizinti", "ad": "Sızıntı Kontrolü", "aciklama": "Parolanız bilinen veri sızıntılarında var mı?"},
     {"kod": "oneri", "ad": "Öneri ve Rehber", "aciklama": "Size özel güvenlik önerileri alın."},
     {"kod": "quiz", "ad": "Farkındalık Quizi", "aciklama": "Bilginizi test edin."},

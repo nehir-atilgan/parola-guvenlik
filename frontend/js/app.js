@@ -29,8 +29,17 @@ function kartOlustur(m) {
   aciklama.textContent = m.aciklama;
   const rozet = document.createElement("span");
   rozet.className = "rozet";
-  rozet.textContent = "Yakında";
-
+  rozet.textContent = m.sayfa ? "Hazır" : "Yakında";
   kart.append(baslik, aciklama, rozet);
+
+  if (m.sayfa) {
+    // Hazır modüller tıklanabilir bir kart olur.
+    const baglanti = document.createElement("a");
+    baglanti.href = m.sayfa;
+    baglanti.className = "kart kart-baglanti";
+    baglanti.append(...kart.childNodes);
+    rozet.classList.add("hazir");
+    return baglanti;
+  }
   return kart;
 }

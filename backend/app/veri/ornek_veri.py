@@ -10,7 +10,8 @@ import random
 
 from werkzeug.security import generate_password_hash
 
-from app.veri.repolar import analiz_repo, kullanici_repo, oneri_repo, quiz_repo
+from app.servisler.parola_analiz import entropi_hesapla, oneri_kodlari_sec, seviye_belirle
+from app.veri.repolar import analiz_repo, kullanici_repo, quiz_repo
 
 KULLANICI_SAYISI = 8
 
@@ -21,34 +22,12 @@ DEMO_HESAPLARI = [
 ]
 
 
-def _seviye(skor):
-    return "zayif" if skor < 40 else "orta" if skor < 70 else "guclu"
-
-
-def _uygun_oneriler(analiz):
-    """Analiz ölçümlerine göre hangi önerilerin verileceği (basit kurallar)."""
-    kodlar = []
-    if analiz["sizinti_sayisi"] > 0:
-        kodlar.append("SIZINTI_DEGISTIR")
-    if analiz["uzunluk"] < 12:
-        kodlar.append("UZUNLUK_ARTIR")
-    if not analiz["buyuk_harf"]:
-        kodlar.append("BUYUK_HARF_EKLE")
-    if not analiz["rakam"]:
-        kodlar.append("RAKAM_EKLE")
-    if not analiz["ozel_karakter"]:
-        kodlar.append("OZEL_KARAKTER")
-    kodlar.append("IKI_FAKTOR")
-    return kodlar[:5]  # öncelik 1..5
-
-
 def yukle(con, tohum=42):
     """Örnek veriyi yükler. Tablolarda zaten kullanıcı varsa hiçbir şey yapmaz."""
     if con.execute("SELECT COUNT(*) FROM kullanici").fetchone()[0] > 0:
         return {"durum": "atlandi", "neden": "veritabanında zaten kullanıcı var"}
 
     rnd = random.Random(tohum)
-    oneri_idleri = {o["kod"]: o["id"] for o in oneri_repo.listele(con)}
     sayac = {"kullanici": 0, "analiz": 0, "analiz_oneri": 0, "quiz": 0}
 
     hesaplar = [
@@ -67,15 +46,13 @@ def yukle(con, tohum=42):
             ozellik = {k: rnd.random() < 0.6 for k in ("buyuk_harf", "kucuk_harf", "rakam", "ozel_karakter")}
             skor = min(100, uzunluk * 4 + 8 * sum(ozellik.values()))
             sizinti = rnd.choice([0, 0, 0, rnd.randint(1, 250000)]) if skor < 60 else 0
-            aid = analiz_repo.olustur(
-                con, kid, uzunluk, skor, _seviye(skor), sizinti_sayisi=sizinti, **ozellik
-            )
+            # Seviye, entropi ve öneriler gerçek analiz modülüyle aynı kurallarla belirlenir.
+            olcum = {"uzunluk": uzunluk, "guc_skoru": skor, "guc_seviyesi": seviye_belirle(skor),
+                     "sizinti_sayisi": sizinti, "entropi_bit": entropi_hesapla(uzunluk, ozellik), **ozellik}
+            kodlar = oneri_kodlari_sec(olcum)
+            analiz_repo.onerileriyle_kaydet(con, kid, olcum, kodlar)
             sayac["analiz"] += 1
-
-            analiz = analiz_repo.getir(con, aid)
-            for oncelik, kod in enumerate(_uygun_oneriler(analiz), start=1):
-                analiz_repo.oneri_ekle(con, aid, oneri_idleri[kod], oncelik)
-                sayac["analiz_oneri"] += 1
+            sayac["analiz_oneri"] += len(kodlar)
 
         for _ in range(rnd.randint(0, 2)):
             soru = 10

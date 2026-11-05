@@ -29,6 +29,7 @@ erDiagram
         bool rakam
         bool ozel_karakter
         int sizinti_sayisi
+        int entropi_bit
         datetime analiz_tarihi
     }
     ONERI {

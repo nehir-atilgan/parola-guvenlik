@@ -24,6 +24,11 @@ def istek_tokeni():
     return token.strip() if tur.lower() == "bearer" else None
 
 
+def istek_kullanicisi():
+    """Giriş isteğe bağlı olan uç noktalar için: geçerli oturum varsa kullanıcı, yoksa None."""
+    return kimlik_servisi.oturumu_dogrula(get_db(), istek_tokeni())
+
+
 def giris_gerekli(fonksiyon):
     @wraps(fonksiyon)
     def sarmalayici(*args, **kwargs):

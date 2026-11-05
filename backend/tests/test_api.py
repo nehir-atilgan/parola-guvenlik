@@ -10,7 +10,7 @@ def test_moduller_listesi(istemci):
 
 def test_oneriler_veritabanindan_gelir(istemci):
     oneriler = istemci.get("/api/oneriler").get_json()
-    assert len(oneriler) == 9
+    assert len(oneriler) == 12
     assert {o["kod"] for o in oneriler} >= {"UZUNLUK_ARTIR", "IKI_FAKTOR"}
 
 

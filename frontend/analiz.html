@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Parola Gücü Analizi · Parola Güvenliği</title>
+  <link rel="stylesheet" href="css/stil.css">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Ctext y=%22.9em%22 font-size=%2290%22%3E%F0%9F%94%90%3C/text%3E%3C/svg%3E">
+</head>
+<body>
+  <header class="ust">
+    <a href="index.html" class="logo">🔐 Parola Güvenliği</a>
+    <nav id="menu" class="menu"></nav>
+  </header>
+
+  <main class="icerik">
+    <h1>Parola Gücü Analizi</h1>
+    <p class="soluk">Parolanız yalnızca analiz için kullanılır; hiçbir yerde saklanmaz. Kaydettiğinizde yalnızca skor ve ölçümler kaydedilir.</p>
+
+    <form id="analiz-formu" class="form analiz-form" autocomplete="off" novalidate>
+      <label for="parola">Analiz edilecek parola</label>
+      <div class="parola-kutu">
+        <input id="parola" name="parola" type="password" maxlength="128" autocomplete="off" spellcheck="false" required>
+        <button type="button" id="goster" class="metin-btn" aria-pressed="false">Göster</button>
+      </div>
+      <label id="kaydet-satir" class="onay" hidden>
+        <input type="checkbox" id="kaydet"> Sonucu geçmişime kaydet (parola kaydedilmez)
+      </label>
+      <p id="mesaj" class="mesaj" role="alert" hidden></p>
+      <button type="submit" class="btn">Analiz et</button>
+    </form>
+
+    <section id="sonuc" class="sonuc" hidden aria-live="polite">
+      <div class="skor-ust">
+        <div>
+          <p class="soluk kucuk">Güç skoru</p>
+          <p class="skor"><span id="skor"></span><span class="soluk"> / 100</span></p>
+        </div>
+        <span id="seviye" class="seviye"></span>
+      </div>
+      <div class="cubuk" role="progressbar" aria-valuemin="0" aria-valuemax="100"><div id="cubuk-dolgu"></div></div>
+
+      <div class="kartlar uc">
+        <article class="kart"><p class="soluk kucuk">Tahmini kırılma süresi</p><p id="sure" class="orta-sayi"></p></article>
+        <article class="kart"><p class="soluk kucuk">Entropi</p><p class="orta-sayi"><span id="entropi"></span> bit</p><p class="soluk kucuk not-satir">Kaba kuvvet tahmini; desenler hesaba katılmadan. Kırılma süresi desenleri hesaba katar.</p></article>
+        <article class="kart"><p class="soluk kucuk">Karakter türleri</p><ul id="siniflar" class="siniflar"></ul></article>
+      </div>
+
+      <div class="kartlar iki">
+        <article class="kart">
+          <h2>Skor nasıl hesaplandı?</h2>
+          <table class="tablo mini">
+            <tbody id="olcutler"></tbody>
+          </table>
+          <ul id="kurallar" class="liste kucuk"></ul>
+        </article>
+        <article class="kart">
+          <h2>Öneriler</h2>
+          <ol id="oneriler" class="oneriler"></ol>
+        </article>
+      </div>
+    </section>
+
+    <section id="gecmis-bolum" hidden>
+      <h2>Analiz geçmişim</h2>
+      <div class="tablo-kutu">
+        <table class="tablo">
+          <thead><tr><th>Tarih</th><th>Skor</th><th>Seviye</th><th>Uzunluk</th><th>Entropi</th><th></th></tr></thead>
+          <tbody id="gecmis"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/oturum.js"></script>
+  <script src="js/analiz.js"></script>
+</body>
+</html>

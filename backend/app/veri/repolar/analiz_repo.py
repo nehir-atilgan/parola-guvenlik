@@ -16,6 +16,36 @@ def olustur(con, kullanici_id, uzunluk, guc_skoru, guc_seviyesi,
     return imlec.lastrowid
 
 
+def onerileriyle_kaydet(con, kullanici_id, olcum, oneri_kodlari):
+    """CREATE — analiz kaydını ve önerilerini TEK İŞLEMDE (transaction) kaydeder.
+    Öneri eklenirken hata olursa analiz de kaydedilmez; yarım kayıt kalmaz."""
+    with con:  # hata olursa otomatik ROLLBACK, başarılıysa COMMIT
+        imlec = con.execute(
+            """INSERT INTO analiz_kaydi
+                   (kullanici_id, uzunluk, guc_skoru, guc_seviyesi, buyuk_harf, kucuk_harf,
+                    rakam, ozel_karakter, sizinti_sayisi, entropi_bit)
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+            (kullanici_id, olcum["uzunluk"], olcum["guc_skoru"], olcum["guc_seviyesi"],
+             int(olcum["buyuk_harf"]), int(olcum["kucuk_harf"]), int(olcum["rakam"]),
+             int(olcum["ozel_karakter"]), olcum.get("sizinti_sayisi", 0), olcum.get("entropi_bit", 0)),
+        )
+        analiz_id = imlec.lastrowid
+        for oncelik, kod in enumerate(oneri_kodlari, start=1):
+            con.execute(
+                """INSERT INTO analiz_oneri (analiz_id, oneri_id, oncelik)
+                   SELECT ?, id, ? FROM oneri WHERE kod = ?""",
+                (analiz_id, oncelik, kod),
+            )
+    return analiz_id
+
+
+def kullaniciya_ait_getir(con, analiz_id, kullanici_id):
+    """READ — yalnızca kaydın sahibi ise döndürür (sahiplik kontrolü SQL'in içinde)."""
+    return con.execute(
+        "SELECT * FROM analiz_kaydi WHERE id = ? AND kullanici_id = ?", (analiz_id, kullanici_id)
+    ).fetchone()
+
+
 def getir(con, analiz_id):
     """READ — tek analiz kaydı."""
     return con.execute("SELECT * FROM analiz_kaydi WHERE id = ?", (analiz_id,)).fetchone()

@@ -16,7 +16,7 @@ Bireysel kullanıcılar ve kurum çalışanları.
 
 | Modül | Durum |
 |---|---|
-| Parola gücü analizi | ⏳ Planlandı |
+| Parola gücü analizi | ✅ Hafta 6 |
 | Sızıntı kontrolü (Have I Been Pwned API) | ⏳ Planlandı |
 | Öneri ve rehber (yapay zekâ destekli) | ⏳ Planlandı |
 | Kayıt, giriş ve rol tabanlı erişim | ✅ Hafta 5 |
@@ -39,7 +39,8 @@ parola-guvenlik/
 │   │   ├── __init__.py          #   Uygulama fabrikası + CORS
 │   │   ├── config.py            #   Ayarlar (.env'den okunur)
 │   │   ├── api/                 #   API KATMANI: /api/... uç noktaları, yetki.py (401/403)
-│   │   ├── servisler/           #   İŞ KATMANI: kimlik_servisi (kayıt/giriş/oturum), ...
+│   │   ├── servisler/           #   İŞ KATMANI: kimlik_servisi (kayıt/giriş/oturum),
+│   │   │                        #     parola_analiz (güç ölçütleri, iş kuralları, skor)
 │   │   └── veri/                #   VERİ KATMANI
 │   │       ├── migrations/      #     Sürümlü şema dosyaları (001, 002 ...)
 │   │       ├── migrator.py      #     Migration çalıştırıcısı
@@ -54,17 +55,20 @@ parola-guvenlik/
 │   ├── kayit.html / giris.html  #   Kayıt ve giriş
 │   ├── panel.html               #   Kullanıcı paneli (giriş gerekli)
 │   ├── yonetici.html            #   Kullanıcı yönetimi (yalnızca yönetici)
+│   ├── analiz.html              #   Parola Gücü Analizi
 │   ├── css/stil.css
 │   └── js/
 │       ├── config.js            #   Backend adresi
 │       ├── api.js               #   Backend ile konuşan tek dosya
 │       ├── oturum.js            #   Token saklama, menü, sayfa koruma
+│       ├── analiz.js            #   Analiz sayfasının mantığı
 │       └── app.js               #   Sayfa mantığı
 └── docs/
     ├── er_diyagrami.md          # ER diyagramı + normalizasyon
     ├── mimari.md                # Mimari şema
     ├── veritabani.md            # Kısıtlar, indeksler, migration, CRUD açıklaması
     ├── guvenlik_notu.md         # Hash/tuz, oturum, rol tabanlı erişim, OWASP
+    ├── parola_gucu_analizi.md   # Analiz modülü: ölçütler, iş kuralları, veri modeli, entegrasyon
     ├── ornek_sorgular.sql       # Örnek veriyle çalışan sorgular
     └── ornek_veri_dokumu.sql    # Örnek veriyle dolu veritabanının dökümü
 ```
@@ -118,6 +122,7 @@ Veritabanı ilk çalıştırmada `backend/instance/parola_guvenlik.db` olarak ot
 - [Veritabanı tasarımı ve veri erişim katmanı](docs/veritabani.md)
 - [Örnek sorgular](docs/ornek_sorgular.sql)
 - [Güvenlik notu (kimlik doğrulama ve yetkilendirme)](docs/guvenlik_notu.md)
+- [Parola Gücü Analizi modülü](docs/parola_gucu_analizi.md)
 
 ## Gizlilik ilkesi
 
@@ -130,3 +135,4 @@ Analiz edilen parolalar **hiçbir zaman saklanmaz**. Sızıntı kontrolünde par
 | 3 | Kurulum, mimari ve veri modeli | ✅ |
 | 4 | Veritabanı tasarımı ve veri erişim katmanı | ✅ |
 | 5 | Kullanıcı yönetimi ve kimlik doğrulama | ✅ |
+| 6 | Çekirdek Modül A: Parola Gücü Analizi | ✅ |
